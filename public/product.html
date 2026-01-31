@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyShop - Product Details</title>
+  <title>MyShop - Product Detail</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    .product-detail-container {
-      max-width: 1100px;
+    body { font-family: Arial, sans-serif; margin: 0; background: #f8f9fa; }
+    .container {
+      max-width: 1000px;
       margin: 2rem auto;
       padding: 0 1rem;
       display: grid;
@@ -18,82 +19,53 @@
       width: 100%;
       max-height: 500px;
       object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     .product-info h1 {
       margin-bottom: 1rem;
-      font-size: 2.4rem;
+      font-size: 2.5rem;
     }
     .price {
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       color: #28a745;
-      margin: 1rem 0;
       font-weight: bold;
-    }
-    .stock {
-      font-size: 1.2rem;
       margin: 1rem 0;
-      font-weight: bold;
     }
-    .in-stock { color: #28a745; }
-    .out-of-stock { color: #dc3545; }
     .description {
       line-height: 1.7;
-      margin: 1.5rem 0;
       color: #444;
+      margin: 1.5rem 0;
     }
-    .add-to-cart-btn {
+    .add-btn {
       background: #007bff;
       color: white;
       border: none;
       padding: 1rem 2.5rem;
       font-size: 1.2rem;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 1.5rem;
       transition: background 0.3s;
     }
-    .add-to-cart-btn:hover { background: #0056b3; }
-    .add-to-cart-btn:disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-    }
-    .back-btn {
-      display: inline-block;
-      margin-top: 2rem;
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-    }
+    .add-btn:hover { background: #0056b3; }
     @media (max-width: 768px) {
-      .product-detail-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .product-image {
-        max-height: 400px;
-      }
+      .container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar (copy from your other pages) -->
   <header>
     <nav class="navbar">
       <div class="logo">MyShop</div>
-      
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-
       <div class="nav-right">
-        <a href="cart.html" class="cart-link">
-          Cart 
-        </a>
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
         <a href="login.html" id="login-link">Login / Register</a>
@@ -101,38 +73,24 @@
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="product-detail-container">
-    <div id="product-image-container">
-      <img id="product-image" class="product-image" src="/images/placeholder.jpg" alt="Loading...">
+  <!-- Product Detail -->
+  <main class="container">
+    <div>
+      <img id="product-img" src="" alt="Product" class="product-image">
     </div>
-
     <div class="product-info">
       <h1 id="product-name">Loading...</h1>
       <div class="price" id="product-price">₹0.00</div>
-      <div class="stock" id="product-stock"></div>
-      <p class="description" id="product-description"></p>
-
-      <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>
-        Add to Cart
-      </button>
-
-      <a href="products.html" class="back-btn">← Back to Products</a>
+      <p class="description" id="product-desc"></p>
+      <button id="add-to-cart-btn" class="add-btn">Add to Cart</button>
+      <p><a href="products.html" style="color:#007bff;">← Back to Products</a></p>
     </div>
   </main>
 
   <!-- Footer -->
   <footer>
     <p>© 2025 MyShop. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="contact.html">Contact Us</a> |
-      <a href="#">Privacy Policy</a> |
-      <a href="#">Terms of Service</a>
-    </div>
   </footer>
-
-  <!-- Toast Container -->
-  <div id="toast-container"></div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
@@ -144,57 +102,23 @@
     const productId = urlParams.get('id');
 
     if (!productId) {
-      document.body.innerHTML = '<h1 style="text-align:center; margin:6rem;">Product not found. <a href="products.html">Go back</a></h1>';
+      document.body.innerHTML = '<h1 style="text-align:center; margin:6rem;">Product not found</h1>';
     } else {
-      loadProductDetail(productId);
-    }
+      // Use your sampleProducts array (from products.js)
+      const product = sampleProducts.find(p => p._id === productId);
 
-    async function loadProductDetail(id) {
-      const nameEl     = document.getElementById('product-name');
-      const priceEl    = document.getElementById('product-price');
-      const stockEl    = document.getElementById('product-stock');
-      const descEl     = document.getElementById('product-description');
-      const imgEl      = document.getElementById('product-image');
-      const addBtn     = document.getElementById('add-to-cart-btn');
+      if (product) {
+        document.getElementById('product-name').textContent = product.name;
+        document.getElementById('product-price').textContent = `₹${Number(product.price).toFixed(2)}`;
+        document.getElementById('product-desc').textContent = product.description || 'No description available.';
+        document.getElementById('product-img').src = product.image;
 
-      nameEl.textContent = 'Loading...';
-
-      try {
-        const res = await fetch(`/api/products/${id}`);
-        if (!res.ok) {
-          throw new Error(res.status === 404 ? 'Product not found' : 'Failed to load product');
-        }
-
-        const product = await res.json();
-
-        nameEl.textContent  = product.name;
-        priceEl.textContent = `₹${Number(product.price).toFixed(2)}`;
-        descEl.textContent  = product.description || 'No description available.';
-        imgEl.src           = product.image || '/images/placeholder.jpg';
-        imgEl.alt           = product.name;
-
-        if (product.stock > 0) {
-          stockEl.textContent = `In Stock (${product.stock} available)`;
-          stockEl.className = 'stock in-stock';
-          addBtn.disabled = false;
-          addBtn.textContent = 'Add to Cart';
-          addBtn.onclick = () => {
-            addToCart(product._id, product.name, product.price, product.image);
-            showToast(`Added ${product.name} to cart!`);
-          };
-        } else {
-          stockEl.textContent = 'Out of Stock';
-          stockEl.className = 'stock out-of-stock';
-          addBtn.disabled = true;
-          addBtn.textContent = 'Out of Stock';
-        }
-
-        document.title = `MyShop - ${product.name}`;
-      } catch (err) {
-        nameEl.textContent = 'Error';
-        descEl.textContent = `Could not load product: ${err.message}`;
-        addBtn.style.display = 'none';
-        stockEl.style.display = 'none';
+        document.getElementById('add-to-cart-btn').onclick = () => {
+          addToCart(product._id, product.name, product.price, product.image);
+          showToast(`Added ${product.name} to cart!`);
+        };
+      } else {
+        document.getElementById('product-name').textContent = 'Product not found';
       }
     }
   </script>

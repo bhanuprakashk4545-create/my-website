@@ -1,4 +1,3 @@
-<!-- public/login.html - Full code for Login page with real backend connection -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyShop - Login</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      background: rgba(0,0,0,0.7);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    .logo { font-size: 1.8rem; font-weight: bold; }
+    .nav-links { list-style: none; display: flex; gap: 2rem; }
+    .nav-links a { color: white; text-decoration: none; }
+    .nav-right { display: flex; gap: 1.5rem; align-items: center; }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+    }
+    .auth-container {
+      background: rgba(255,255,255,0.95);
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    h2 { margin-bottom: 1.5rem; color: #333; }
+    .form-group { margin-bottom: 1.5rem; text-align: left; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    input {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    button:hover { background: #5a67d8; }
+    p { margin-top: 1.5rem; color: #555; }
+    a { color: #667eea; text-decoration: none; font-weight: 600; }
+  </style>
 </head>
 <body>
 
@@ -19,64 +76,67 @@
         <li><a href="contact.html">Contact</a></li>
       </ul>
       <div class="nav-right">
-        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
+        <a href="cart.html">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" id="login-link">Login / Register</a>
+        <a href="register.html">Register</a>
       </div>
     </nav>
   </header>
 
   <!-- Login Form -->
-  <main class="auth-container">
-    <h2>Login</h2>
-    <form id="login-form">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="register.html">Register</a></p>
+  <main>
+    <div class="auth-container">
+      <h2>Login to MyShop</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••">
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </div>
   </main>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 MyShop. All rights reserved.</p>
-  </footer>
-
-  <!-- Toast Container -->
-  <div id="toast-container"></div>
-
   <!-- Scripts -->
-  <script src="js/main.js"></script>
-
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
-        const res = await fetch('/api/auth/login', {
+        const res = await fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
-        const data = await res.json();
+
+        const text = await res.text();
+        console.log('Raw response:', text); // Debug - check this in console
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error('Invalid response from server');
+        }
+
         if (res.ok) {
           localStorage.setItem('token', data.token);
-          showToast('Login successful!');
+          alert('Login successful!');
           window.location.href = 'index.html';
         } else {
-          showToast(data.message || 'Login failed', 'error');
+          alert(data.message || 'Login failed');
         }
       } catch (err) {
-        showToast('Error: ' + err.message, 'error');
+        console.error('Login error:', err);
+        alert('Network/server error: ' + err.message);
       }
     });
   </script>

@@ -330,5 +330,11 @@
       document.getElementById('checkout-form')?.addEventListener('submit', placeOrder);
     });
   </script>
+  <script>
+  if (!localStorage.getItem('token')) {
+    alert('Please login to access this page');
+    window.location.href = 'login.html';
+  }
+</script>
 </body>
 </html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      color: #333;
+    }
+    header {
+      background: #1a1a2e;
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .logout-btn {
+      background: #e94560;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    main {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    h1 {
+      text-align: center;
+      color: #1a1a2e;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #16213e;
+      color: white;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .loading, .error-msg, .no-data {
+      text-align: center;
+      padding: 4rem 1rem;
+      font-size: 1.3rem;
+      color: #555;
+    }
+    .error-msg {
+      color: #e94560;
+      background: #fff5f5;
+      border: 1px solid #ffcccc;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop Admin</div>
+      <button class="logout-btn" id="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <h1>All Registered Users</h1>
+
+    <div id="loading" class="loading">Loading users...</div>
+    <div id="error-msg" class="error-msg" style="display:none;"></div>
+    <div id="no-data" class="no-data" style="display:none;">No users found in database.</div>
+
+    <table id="users-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Registered On</th>
+        </tr>
+      </thead>
+      <tbody id="users-body"></tbody>
+    </table>
+  </main>
+
+  <!-- Scripts -->
+  <script>
+    async function loadUsers() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login first');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const loading = document.getElementById('loading');
+      const errorMsg = document.getElementById('error-msg');
+      const noData = document.getElementById('no-data');
+      const table = document.getElementById('users-table');
+      const tbody = document.getElementById('users-body');
+
+      loading.style.display = 'block';
+      errorMsg.style.display = 'none';
+      noData.style.display = 'none';
+      table.style.display = 'none';
+
+      try {
+        const res = await fetch('http://localhost:3000/api/admin/users', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        // Debug logs – very important
+        console.log('Admin request status:', res.status);
+        const text = await res.text();
+        console.log('Admin raw response from server:', text);
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          console.error('Failed to parse JSON:', parseErr);
+          throw new Error('Server returned invalid response (not JSON)');
+        }
+
+        loading.style.display = 'none';
+
+        if (!res.ok) {
+          errorMsg.textContent = data.message || `Error ${res.status}: ${text}`;
+          errorMsg.style.display = 'block';
+
+          if (res.status === 401 || res.status === 403) {
+            alert('Session expired or admin access required. Please login again.');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+          }
+          return;
+        }
+
+        if (data.length === 0) {
+          noData.style.display = 'block';
+          return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = '';
+
+        data.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.name || 'N/A'}</td>
+            <td>${user.email || 'N/A'}</td>
+            <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error('Load users failed:', err);
+        loading.style.display = 'none';
+        errorMsg.textContent = 'Error loading users: ' + err.message;
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUsers();
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+      });
+    });
+  </script>
+</body>
+</html>

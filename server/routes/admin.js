@@ -1,34 +1,43 @@
-// server/routes/admin.js - Admin route to see users (protected)
+// server/routes/admin.js
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+const User = require('../models/User');
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// Middleware to check token and admin status
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+  if (!token) return res.status(401).json({ message: 'No token' });
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded token:', decoded); // Add this
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ message: 'Token is not valid' });
+    console.error('Token verification failed:', err);
+    res.status(401).json({ message: 'Invalid token' });
   }
 };
 
 const adminMiddleware = (req, res, next) => {
-  if (!req.user.isAdmin) return res.status(403).json({ message: 'Access denied' });
+  console.log('User from token:', req.user); // Add this debug line
+  if (!req.user.isAdmin) {
+    console.log('Admin check failed - isAdmin:', req.user.isAdmin);
+    return res.status(403).json({ message: 'Admin access required' });
+  }
   next();
 };
 
-// Get all users (for admin)
+// Get all users (only for admin)
 router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const users = await User.find({}, 'name email createdAt'); // Exclude password
+    const users = await User.find().select('-password'); // exclude password
     res.json(users);
   } catch (err) {
+    console.error('Admin users error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

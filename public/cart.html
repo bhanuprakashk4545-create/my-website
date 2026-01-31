@@ -138,5 +138,11 @@
       document.getElementById('checkout-btn')?.addEventListener('click', handleCheckout);
     });
   </script>
+  <script>
+  if (!localStorage.getItem('token')) {
+    alert('Please login to access this page');
+    window.location.href = 'login.html';
+  }
+</script>
 </body>
 </html>

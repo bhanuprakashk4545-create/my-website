@@ -442,3 +442,19 @@ footer {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
+/* Simple product card animation */
+.product-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease-out;
+}
+
+.product-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+}

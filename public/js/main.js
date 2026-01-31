@@ -63,22 +63,58 @@ function updateCartCount() {
 }
 
 // Run shared logic on every page load
+// Check if logged in on every page load
 document.addEventListener('DOMContentLoaded', () => {
-    updateAuthUI();
-    updateCartCount();
+  const token = localStorage.getItem('token');
+  const userStatus = document.getElementById('user-status');
 
-    // Logout button listener (exists on most pages)
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
-
-    // Optional: listen for storage changes (if cart updated in another tab)
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'cart') {
-            updateCartCount();
-        }
+  if (token && userStatus) {
+    // Optional: fetch user info from backend
+    fetch('http://localhost:3000/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.name) {
+        userStatus.textContent = `Welcome, ${data.name}`;
+      } else {
+        userStatus.textContent = 'Logged In';
+      }
+    })
+    .catch(() => {
+      userStatus.textContent = 'Logged In';
     });
+
+    // Show logout button
+    document.getElementById('logout-btn').style.display = 'inline';
+    document.getElementById('login-link').style.display = 'none';
+  } else {
+    userStatus.textContent = 'Guest';
+    document.getElementById('logout-btn').style.display = 'none';
+    document.getElementById('login-link').style.display = 'inline';
+  }
+
+  // Logout handler
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = 'index.html';
+  });
+});
+// Animate product cards on scroll / load
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.product-card');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(card => {
+    observer.observe(card);
+  });
 });
 
 // Make functions available globally if needed in inline scripts

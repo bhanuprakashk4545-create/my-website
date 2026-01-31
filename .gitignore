@@ -1,0 +1,13 @@
+# Common ignores for e-commerce projects
+node_modules/
+.env
+.env.local
+.env.development
+.env.production
+dist/
+build/
+.next/
+vendor/
+*.log
+*.sqlite
+*.sqlite3
