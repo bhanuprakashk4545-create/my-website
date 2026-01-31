@@ -1,0 +1,88 @@
+<!-- public/register.html - Full code for Register page with real backend connection -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Register</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Register Form -->
+  <main class="auth-container">
+    <h2>Register</h2>
+    <form id="register-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Registration successful! Please login.');
+          window.location.href = 'login.html';
+        } else {
+          showToast(data.message || 'Registration failed', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    });
+  </script>
+</body>
+</html>

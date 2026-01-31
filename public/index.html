@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Hero with Carousel */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #111827 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 60%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      width: 100%;
+    }
+
+    .big-sale-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 0.7rem 2rem;
+      border-radius: 50px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 20px rgba(239,68,68,0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      font-weight: 900;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.6);
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      opacity: 0.95;
+    }
+
+    .shop-now-btn {
+      display: inline-block;
+      background: #f59e0b;
+      color: white;
+      padding: 1.2rem 3rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(245,158,11,0.5);
+    }
+
+    .shop-now-btn:hover {
+      background: #d97706;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(245,158,11,0.6);
+    }
+
+    /* Carousel inside hero */
+    .hero-carousel {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .carousel-slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+    }
+
+    .carousel-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      max-width: 800px;
+    }
+
+    .carousel-content h2 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .carousel-content p {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: white;
+      transform: scale(1.3);
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.8rem; }
+      .hero p { font-size: 1.3rem; }
+      .carousel-content h2 { font-size: 2.5rem; }
+      .carousel-content p { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero with Product Carousel -->
+  <section class="hero">
+    <div class="hero-carousel">
+      <div class="carousel-slides" id="carousel-slides">
+        <!-- Slide 1 -->
+        <div class="carousel-slide" style="background-image: url('data:image/jpeg;base64,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');">
+          <div class="carousel-content">
+            <div class="big-sale-badge">BIG SALE</div>
+            <h2>Up to 70% OFF</h2>
+            <p>Premium Smartphones & Accessories</p>
+            <a href="products.html" class="shop-now-btn">Shop Now</a>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-slide" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm5TK25YEYzhuMNTSzEYNzY_IAoSnmTKG3gg&s');">
+          <div class="carousel-content">
+            <div class="big-sale-badge">FLASH DEAL</div>
+            <h2>Power Banks & Chargers</h2>
+            <p>Fast Charging – Starting ₹999</p>
+            <a href="products.html" class="shop-now-btn">Grab Now</a>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1400');">
+          <div class="carousel-content">
+            <div class="big-sale-badge">LIMITED STOCK</div>
+            <h2>Wireless Earbuds & Speakers</h2>
+            <p>Best Audio Experience – Up to 50% Off</p>
+            <a href="products.html" class="shop-now-btn">Buy Today</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dots Navigation -->
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </div>
+
+    <!-- Overlay Text (optional - can remove if carousel is enough) -->
+    <div class="hero-content" style="position:absolute; z-index:3; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; width:90%;">
+      
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="featured">
+    <center>
+    <h1>Featured Products</h1>
+    </center>
+    <div id="featured-products" class="products-grid"></div>
+  </section>
+  <!-- Two Banners at the bottom -->
+<section class="bottom-banners" style="padding: 3rem 2rem; background: #f8fafc;">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 2rem;">
+    
+    <!-- Banner 1: Seasonal Offers -->
+    <div style="background: linear-gradient(135deg, #7c3aed, #c084fc); color: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(124,58,237,0.25); position: relative; height: 240px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div style="position: relative; z-index: 2; padding: 2rem;">
+        <h3 style="font-size: 2.4rem; margin-bottom: 0.8rem; font-weight: 800;">SEASONAL OFFERS</h3>
+        <p style="font-size: 1.4rem; margin-bottom: 1.5rem;">Up to <strong style="font-size: 2rem;">70% OFF</strong> this week!</p>
+        <a href="products.html" style="background: white; color: #7c3aed; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s;">Shop Now</a>
+      </div>
+    </div>
+
+    <!-- Banner 2: Fast Delivery -->
+    <div style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(14,165,233,0.25); position: relative; height: 240px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div style="position: relative; z-index: 2; padding: 2rem;">
+        <h3 style="font-size: 2.4rem; margin-bottom: 0.8rem; font-weight: 800;">FAST DELIVERY</h3>
+        <p style="font-size: 1.4rem; margin-bottom: 1.5rem;">Free Shipping in Bengaluru <br><strong>Within 24 Hours</strong></p>
+        <a href="products.html" style="background: white; color: #0ea5e9; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s;">Order Now</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="contact.html">Contact Us</a> |
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/products.js"></script>
+
+  <script>
+    // Carousel Logic
+    const slides = document.getElementById('carousel-slides');
+    const dotsContainer = document.getElementById('carousel-dots');
+    let currentSlide = 0;
+    const totalSlides = 3; // change if you add more slides
+
+    // Create dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll('.dot');
+
+    function goToSlide(index) {
+      currentSlide = index;
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    }
+
+    // Auto-slide
+    let autoSlide = setInterval(() => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      goToSlide(currentSlide);
+    }, 5000);
+
+    // Pause on hover
+    document.querySelector('.hero-carousel').addEventListener('mouseenter', () => {
+      clearInterval(autoSlide);
+    });
+
+    document.querySelector('.hero-carousel').addEventListener('mouseleave', () => {
+      autoSlide = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        goToSlide(currentSlide);
+      }, 5000);
+    });
+
+    // Featured products (using sampleProducts from products.js)
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('featured-products');
+      if (!container) return;
+
+      container.innerHTML = '<div class="loading">Loading featured products...</div>';
+
+      setTimeout(() => {
+        const featured = sampleProducts.slice(0, 8);
+        container.innerHTML = '';
+
+        featured.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${p.image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>₹${Number(p.price).toFixed(2)}</p>
+            <button class="add-to-cart"
+                    data-id="${p._id}"
+                    data-name="${p.name.replace(/"/g, '&quot;')}"
+                    data-price="${p.price}"
+                    data-image="${p.image}">
+              Add to Cart
+            </button>
+          `;
+          container.appendChild(card);
+        });
+
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const { id, name, price, image } = e.target.dataset;
+            addToCart(id, name, Number(price), image);
+            showToast(`Added ${name} to cart!`);
+          });
+        });
+      }, 600);
+    });
+  </script>
+
+</body>
+</html>

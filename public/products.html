@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - All Products</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .filters { background: #f8f9fa; padding: 1.5rem; text-align: center; border-bottom: 1px solid #ddd; }
+    .search-bar { margin-bottom: 1rem; }
+    #search-input { width: 100%; max-width: 500px; padding: 0.8rem; font-size: 1.1rem; border-radius: 6px; border: 1px solid #ccc; }
+    .category-filters { margin: 1rem 0; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+    .filter-btn { padding: 0.6rem 1.2rem; background: #e9ecef; border: none; border-radius: 30px; cursor: pointer; }
+    .filter-btn.active, .filter-btn:hover { background: #007bff; color: white; }
+    .sort-options { margin: 1rem 0; }
+    #sort-select { padding: 0.6rem 1rem; font-size: 1rem; border-radius: 6px; }
+    .products-section { padding: 2rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; }
+    .product-card { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-card img { width: 100%; height: 200px; object-fit: contain; background: #f8f9fa; padding: 1rem; }
+    .product-card h3 { padding: 0 1rem; font-size: 1.2rem; margin: 0.8rem 0 0.4rem; }
+    .product-card p { padding: 0 1rem; color: #28a745; font-weight: bold; font-size: 1.3rem; }
+    .add-to-cart { width: 100%; padding: 0.9rem; background: #007bff; color: white; border: none; cursor: pointer; font-size: 1rem; }
+    .add-to-cart:hover { background: #0056b3; }
+    .loading { text-align: center; padding: 4rem; font-size: 1.4rem; color: #666; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar (same as your home page) -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Filters + Search + Sort -->
+  <section class="filters">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search products..." />
+    </div>
+
+    <div class="sort-options">
+      <label for="sort-select">Sort by: </label>
+      <select id="sort-select">
+        <option value="default">Default</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name-asc">Name: A to Z</option>
+        <option value="name-desc">Name: Z to A</option>
+      </select>
+    </div>
+
+    <div class="category-filters">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="electronics">Electronics</button>
+      <button class="filter-btn" data-category="clothing">Clothing</button>
+      <button class="filter-btn" data-category="accessories">Accessories</button>
+      <button class="filter-btn" data-category="home">Home & Kitchen</button>
+      <button class="filter-btn" data-category="fitness">Fitness</button>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="products-section">
+    <h1 style="text-align:center; margin-bottom:2rem;">All Products</h1>
+    <div id="products-container" class="products-grid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/products.js"></script>
+
+</body>
+</html>

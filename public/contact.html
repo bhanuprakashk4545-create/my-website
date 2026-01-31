@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Contact Us</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .contact-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    .contact-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .contact-header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .contact-header p {
+      font-size: 1.2rem;
+      color: #555;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .contact-info {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+    .contact-info h3 {
+      margin-bottom: 1.5rem;
+      color: #007bff;
+    }
+    .info-item {
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+    }
+    .info-item strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: #444;
+    }
+    .contact-form {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e0e0e0;
+    }
+    .form-group {
+      margin-bottom: 1.6rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      color: #444;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 1.1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover {
+      background: #0056b3;
+    }
+    #form-result {
+      margin-top: 1.5rem;
+      padding: 1.2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    .success-msg { background: #d4edda; color: #155724; }
+    .error-msg   { background: #f8d7da; color: #721c24; }
+    @media (max-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">
+          Cart <span id="cart-count">0</span>
+        </a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="contact-container">
+
+    <div class="contact-header">
+      <h1>Get in Touch</h1>
+      <p>We're here to help! Reach out to us with any questions, feedback, or support requests.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <!-- Contact Information -->
+      <div class="contact-info">
+        <h3>Contact Information</h3>
+        
+        <div class="info-item">
+          <strong>Address:</strong>
+          MyShop Headquarters<br>
+          123 MG Road, Indiranagar<br>
+          Bengaluru, Karnataka 560038
+        </div>
+
+        <div class="info-item">
+          <strong>Email:</strong>
+          support@myshop.in<br>
+          orders@myshop.in
+        </div>
+
+        <div class="info-item">
+          <strong>Phone:</strong>
+          +91 80 4123 4567<br>
+          Mon–Sat: 10:00 AM – 8:00 PM
+        </div>
+
+        <div class="info-item">
+          <strong>Working Hours:</strong>
+          Monday – Saturday: 10 AM – 8 PM<br>
+          Sunday: Closed
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form">
+        <h3>Send us a Message</h3>
+        
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your name"

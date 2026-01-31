@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Cart</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .cart-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .cart-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      font-weight: bold;
+      padding: 1rem 0;
+      border-bottom: 2px solid #333;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    .cart-item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .quantity-btn {
+      width: 32px;
+      height: 32px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .quantity-input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0.3rem;
+    }
+    .remove-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .cart-summary {
+      margin-top: 2rem;
+      text-align: right;
+      font-size: 1.3rem;
+    }
+    .checkout-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .empty-cart {
+      text-align: center;
+      padding: 4rem 0;
+      font-size: 1.3rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header (copy your navbar here) -->
+  <header>
+    <nav class="navbar">
+      <!-- ... your existing navbar code ... -->
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">
+          Cart 
+        </a>
+        <!-- ... login/logout ... -->
+      </div>
+    </nav>
+  </header>
+
+  <main class="cart-container">
+    <h1>Your Shopping Cart</h1>
+
+    <div class="cart-header">
+      <span>Product</span>
+      <span>Price</span>
+      <span>Quantity</span>
+      <span>Total</span>
+    </div>
+
+    <div id="cart-items"></div>
+
+    <div id="cart-summary" class="cart-summary">
+      <p>Subtotal: <strong id="cart-total">₹0.00</strong></p>
+      <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+    </div>
+
+    <div id="empty-message" class="empty-cart" style="display:none;">
+      <p>Your cart is empty.</p>
+      <a href="products.html">Continue Shopping</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    // Load cart when page is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCart();
+      document.getElementById('checkout-btn')?.addEventListener('click', handleCheckout);
+    });
+  </script>
+</body>
+</html>

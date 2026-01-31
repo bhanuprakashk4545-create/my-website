@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Checkout</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .checkout-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+    .order-summary, .checkout-form-section {
+      background: #fff;
+      padding: 1.8rem;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .summary-header {
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.8rem;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.9rem 0;
+      font-size: 1.05rem;
+    }
+    .total-line {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 2px solid #333;
+    }
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .place-order-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background 0.3s;
+    }
+    .place-order-btn:hover:not(:disabled) {
+      background: #218838;
+    }
+    .place-order-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+    #order-result {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .success-box { background: #d4edda; color: #155724; }
+    .error-box   { background: #f8d7da; color: #721c24; }
+    .empty-cart-msg {
+      text-align: center;
+      padding: 4rem 1rem;
+      font-size: 1.3rem;
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">
+          Cart
+        </a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="checkout-container">
+
+    <!-- Order Summary -->
+    <section class="order-summary">
+      <h2 class="summary-header">Order Summary</h2>
+      <div id="summary-items"></div>
+      <div class="total-line">
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span id="subtotal">₹0.00</span>
+        </div>
+        <div class="summary-item">
+          <span>Shipping (estimated)</span>
+          <span>₹50.00</span>
+        </div>
+        <div class="summary-item total-line">
+          <span>Total</span>
+          <span id="grand-total">₹0.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout Form -->
+    <section class="checkout-form-section">
+      <h2 class="summary-header">Shipping & Payment</h2>
+      
+      <form id="checkout-form">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required placeholder="John Doe">
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" rows="3" required placeholder="123 Main Street, Apartment 4B..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" required value="Bengaluru">
+        </div>
+
+        <div class="form-group">
+          <label for="pincode">PIN Code</label>
+          <input type="text" id="pincode" required pattern="[0-9]{6}" placeholder="560001">
+        </div>
+
+        <div class="form-group">
+          <label for="payment">Payment Method</label>
+          <select id="payment" required>
+            <option value="">Select payment method</option>
+            <option value="cod">Cash on Delivery</option>
+            <option value="upi">UPI</option>
+            <option value="card">Credit / Debit Card</option>
+          </select>
+        </div>
+
+        <button type="submit" class="place-order-btn" id="place-order-btn">Place Order</button>
+      </form>
+
+      <div id="order-result" style="display:none;"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="contact.html">Contact Us</a> |
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderOrderSummary() {
+      const itemsContainer = document.getElementById('summary-items');
+      const subtotalEl = document.getElementById('subtotal');
+      const grandTotalEl = document.getElementById('grand-total');
+      const placeBtn = document.getElementById('place-order-btn');
+
+      if (!itemsContainer) return;
+
+      itemsContainer.innerHTML = '';
+      let subtotal = 0;
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = '<p class="empty-cart-msg">Your cart is empty.<br><a href="products.html">Continue shopping</a></p>';
+        placeBtn.disabled = true;
+        subtotalEl.textContent = '₹0.00';
+        grandTotalEl.textContent = '₹0.00';
+        return;
+      }
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const row = document.createElement('div');
+        row.className = 'summary-item';
+        row.innerHTML = `
+          <span>${item.name} × ${item.quantity}</span>
+          <span>₹${itemTotal.toFixed(2)}</span>
+        `;
+        itemsContainer.appendChild(row);
+      });
+
+      subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+      grandTotalEl.textContent = `₹${(subtotal + 50).toFixed(2)}`;
+      placeBtn.disabled = false;
+    }
+
+    async function placeOrder(e) {
+      e.preventDefault();
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast('Please login to place an order', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1800);
+        return;
+      }
+
+      if (cart.length === 0) {
+        showToast('Cart is empty', 'error');
+        return;
+      }
+
+      const orderData = {
+        items: cart.map(item => ({
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        shipping: {
+          fullName: document.getElementById('fullName').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          city: document.getElementById('city').value.trim(),
+          pincode: document.getElementById('pincode').value.trim()
+        },
+        paymentMethod: document.getElementById('payment').value,
+        totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + 50
+      };
+
+      const resultDiv = document.getElementById('order-result');
+      const placeBtn = document.getElementById('place-order-btn');
+
+      try {
+        placeBtn.disabled = true;
+        placeBtn.textContent = 'Placing Order...';
+
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(orderData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.removeItem('cart');
+          cart = [];
+          updateCartCount();
+          renderOrderSummary();
+
+          resultDiv.className = 'success-box';
+          resultDiv.innerHTML = `
+            <strong>Order Placed Successfully!</strong><br>
+            ${data.message || 'Thank you for your purchase!'}<br>
+            Order ID: ${data.orderId || 'SIM-' + Date.now()}
+          `;
+          resultDiv.style.display = 'block';
+          document.getElementById('checkout-form').style.display = 'none';
+          showToast('Order placed! Thank you.', 'success');
+        } else {
+          throw new Error(data.message || 'Failed to place order');
+        }
+      } catch (err) {
+        resultDiv.className = 'error-box';
+        resultDiv.textContent = err.message || 'Something went wrong. Please try again.';
+        resultDiv.style.display = 'block';
+        showToast('Order failed. Try again.', 'error');
+      } finally {
+        placeBtn.disabled = false;
+        placeBtn.textContent = 'Place Order';
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderOrderSummary();
+      document.getElementById('checkout-form')?.addEventListener('submit', placeOrder);
+    });
+  </script>
+</body>
+</html>
