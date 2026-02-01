@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - My Address</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .address-container {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; margin-bottom: 2rem; color: #333; }
+    .form-group { margin-bottom: 1.5rem; }
+    label { display: block; margin-bottom: 0.6rem; font-weight: 600; }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+        margin: 5px;
+      width: 100%;
+      padding: 1rem;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    button:hover { background: #218838; }
+    #message { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; text-align: center; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar (copy from your other pages) -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">MyShop</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
+        <span id="user-status">Guest</span>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <a href="login.html" id="login-link">Login / Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Address Form -->
+  <main class="address-container">
+    <h2>Manage Your Address</h2>
+    <form id="address-form">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" required placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required placeholder="9876543210">
+      </div>
+      <div class="form-group">
+        <label for="addressLine">Flat, House no., Building, Company, Apartment</label>
+        <input type="text" id="addressLine" required placeholder="123 Main Street, Apt 4B">
+      </div>
+      <div class="form-group">
+        <label for="landmark">Landmark (optional)</label>
+        <input type="text" id="landmark" placeholder="Near Big Mall">
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" required placeholder="Bengaluru">
+      </div>
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" id="state" required placeholder="Karnataka">
+      </div>
+      <div class="form-group">
+        <label for="pincode">PIN Code</label>
+        <input type="text" id="pincode" required placeholder="560001" pattern="[0-9]{6}">
+      </div>
+      <div class="form-group">
+        <label for="addressType">Address Type</label>
+        <select id="addressType" required>
+          <option value="">Select type</option>
+          <option value="home">Home</option>
+          <option value="work">Work</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button type="submit">Save Address</button>
+      <button type="button" onclick="window.history.back()">Back</button>
+    </form>
+
+    <div id="message" style="display:none;"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script>
+    document.getElementById('address-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const address = {
+        fullName: document.getElementById('fullName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        addressLine: document.getElementById('addressLine').value.trim(),
+        landmark: document.getElementById('landmark').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        pincode: document.getElementById('pincode').value.trim(),
+        addressType: document.getElementById('addressType').value
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/api/address', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(address)
+        });
+
+        const data = await res.json();
+
+        const msgDiv = document.getElementById('message');
+        msgDiv.style.display = 'block';
+
+        if (res.ok) {
+  msgDiv.className = 'success';
+  msgDiv.textContent = 'Address saved successfully!';
+  localStorage.setItem('savedAddress', JSON.stringify(address)); // ← add this
+  document.getElementById('address-form').reset();
+  }  else {
+          msgDiv.className = 'error';
+          msgDiv.textContent = data.message || 'Failed to save address';
+        }
+      } catch (err) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.style.display = 'block';
+        msgDiv.className = 'error';
+        msgDiv.textContent = 'Network error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2,22 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyShop - Checkout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Checkout</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    .checkout-container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    .summary-box, .shipping-box { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
-    .summary-row { display: flex; justify-content: space-between; margin: 0.8rem 0; font-size: 1.1rem; }
-    .grand-total { font-size: 1.4rem; font-weight: bold; border-top: 2px solid #333; padding-top: 1rem; margin-top: 1rem; }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-    .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-    .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; margin-right: 1rem; }
-    .btn-save { background: #6c757d; color: white; }
-    .btn-save:hover { background: #5a6268; }
-    .btn-continue { background: #007bff; color: white; }
-    .btn-continue:hover { background: #0056b3; }
+    .checkout-container {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    .cart-summary, .order-summary {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
+
+    h2 { margin-bottom: 1.5rem; color: #333; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; margin-bottom: 0.3rem; }
+    .item-price { color: #28a745; font-weight: bold; }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1.1rem;
+    }
+
+    .total {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-top: 1rem;
+    }
+
+    .proceed-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background 0.3s;
+    }
+
+    .proceed-btn:hover { background: #0056b3; }
+    .proceed-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    .address-box {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .address-box a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .back-btn:hover { background: #5a6268; }
+
+    .empty-cart {
+      text-align: center;
+      color: #666;
+      padding: 3rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .checkout-container { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -40,141 +132,139 @@
     </nav>
   </header>
 
+  <!-- Checkout Content -->
   <main class="checkout-container">
-    <h1>Checkout</h1>
 
-    <div id="checkout-summary" class="summary-box">
-      <h3>Order Summary</h3>
-      <div id="items-list"></div>
-      <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0.00</span></div>
-      <div class="grand-total"><span>Total</span><span id="grand-total">₹0.00</span></div>
+    <!-- Cart Summary -->
+    <div class="cart-summary">
+      <h2>Your Cart Items</h2>
+      <div id="cart-items"></div>
+      <div id="empty-cart-msg" class="empty-cart" style="display:none;">
+        Your cart is empty. <a href="products.html">Continue shopping</a>
+      </div>
+      <div class="total">
+        Subtotal: <span id="subtotal">₹0.00</span>
+      </div>
     </div>
 
-    <div class="shipping-box">
-      <h3>Shipping Address</h3>
-
-      <!-- Saved addresses dropdown -->
-      <div id="saved-addresses" style="margin-bottom:1.5rem; display:none;">
-        <label>Select saved address:</label>
-        <select id="address-select">
-          <option value="">-- Choose saved address --</option>
-        </select>
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      
+      <div class="address-box">
+        <strong>Delivery Address</strong><br>
+        <span id="address-display">No address added yet.<br><a href="address.html">Add / Update Address →</a></span>
       </div>
 
-      <form id="shipping-form">
-        <div class="form-group"><label for="fullName">Full Name *</label><input type="text" id="fullName" required></div>
-        <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" required pattern="[0-9]{10}"></div>
-        <div class="form-group"><label for="address">Street Address *</label><textarea id="address" rows="3" required></textarea></div>
-        <div class="form-group"><label for="city">City *</label><input type="text" id="city" required></div>
-        <div class="form-group"><label for="pincode">PIN Code *</label><input type="text" id="pincode" required pattern="[0-9]{6}"></div>
-        <div class="form-group"><label for="state">State *</label><input type="text" id="state" required value="Karnataka" readonly></div>
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span id="subtotal-summary">₹0.00</span>
+      </div>
+      <div class="summary-item">
+        <span>Delivery Charges</span>
+        <span>Free</span>
+      </div>
+      <div class="summary-item total">
+        <span>Grand Total</span>
+        <span id="grand-total">₹0.00</span>
+      </div>
 
-        <div style="margin-top:1.5rem;">
-          <button type="button" id="save-address-btn" class="btn btn-save">Save Address</button>
-          <button type="button" id="continue-to-payment" class="btn btn-continue">Continue to Payment</button>
-        </div>
-      </form>
+      <button class="proceed-btn" id="proceed-payment-btn" disabled>Proceed to Payment</button>
+      <a href="cart.html" class="back-btn">← Back to Cart</a>
     </div>
+
   </main>
 
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
+
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    if (typeof updateCartCount === 'function') updateCartCount();
+    // Update checkout page
+    function updateCheckoutPage() {
+      const cart = getCart() || [];
+      const itemsContainer = document.getElementById('cart-items');
+      const emptyMsg = document.getElementById('empty-cart-msg');
+      const subtotalEl = document.getElementById('subtotal');
+      const subtotalSummary = document.getElementById('subtotal-summary');
+      const grandTotalEl = document.getElementById('grand-total');
+      const proceedBtn = document.getElementById('proceed-payment-btn');
+      const addressDisplay = document.getElementById('address-display');
 
-    // Cart summary code...
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let subtotal = 0;
-    const itemsList = document.getElementById('items-list');
+      itemsContainer.innerHTML = '';
+      let subtotal = 0;
 
-    if (cart.length === 0) {
-      document.getElementById('checkout-summary').style.display = 'none';
-      return;
-    }
-
-    cart.forEach(item => {
-      const itemTotal = item.price * item.quantity;
-      subtotal += itemTotal;
-      const div = document.createElement('div');
-      div.innerHTML = `${item.name} × ${item.quantity} <span style="float:right;">₹${itemTotal.toFixed(2)}</span>`;
-      itemsList.appendChild(div);
-    });
-
-    document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
-    document.getElementById('grand-total').textContent = `₹${subtotal.toFixed(2)}`;
-
-    localStorage.setItem('checkoutSubtotal', subtotal.toFixed(2));
-
-    // Debug token
-    const token = localStorage.getItem('token');
-    console.log('Token for request:', token ? 'Present (length: ' + token.length + ')' : 'MISSING - login required');
-
-    // Save address
-    document.getElementById('save-address-btn').addEventListener('click', async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert("Please login first - no token found");
-        return window.location.href = 'login.html';
-      }
-
-      const data = {
-        fullName: document.getElementById('fullName').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        address: document.getElementById('address').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        pincode: document.getElementById('pincode').value.trim(),
-        state: document.getElementById('state').value.trim()
-      };
-
-      if (Object.values(data).some(v => !v)) {
-        alert("Fill all fields");
+      if (cart.length === 0) {
+        emptyMsg.style.display = 'block';
+        subtotalEl.textContent = '₹0.00';
+        subtotalSummary.textContent = '₹0.00';
+        grandTotalEl.textContent = '₹0.00';
+        proceedBtn.disabled = true;
         return;
       }
 
-      console.log("Sending to backend:", data);
+      emptyMsg.style.display = 'none';
+      proceedBtn.disabled = true; // default disabled
 
-      try {
-        const res = await fetch('/api/addresses', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(data)
-        });
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
 
-        console.log('Response status:', res.status);
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div>Qty: ${item.quantity}</div>
+            <div class="item-price">₹${itemTotal.toFixed(2)}</div>
+          </div>
+        `;
+        itemsContainer.appendChild(div);
+      });
 
-        const text = await res.text();  // Read as text first (safe)
-        console.log('Raw server response:', text || '[empty response body]');
+      subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+      subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
+      grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
 
-        let responseData;
-        try {
-          responseData = JSON.parse(text);
-        } catch (parseErr) {
-          throw new Error('Server sent invalid/empty response: ' + text.substring(0, 200));
-        }
-
-        if (!res.ok) {
-          throw new Error(responseData.message || `Server error ${res.status}`);
-        }
-
-        console.log('Success - saved address:', responseData);
-        alert("Address saved successfully! ID: " + responseData._id);
-        loadSavedAddresses();
-      } catch (err) {
-        console.error('Full save error:', err);
-        alert("Failed to save address: " + err.message);
+      // Check if address is saved
+      const savedAddress = localStorage.getItem('savedAddress');
+      if (savedAddress) {
+        const addr = JSON.parse(savedAddress);
+        addressDisplay.innerHTML = `
+          ${addr.fullName}<br>
+          ${addr.addressLine}<br>
+          ${addr.city}, ${addr.state} - ${addr.pincode}<br>
+          Phone: ${addr.phone}<br>
+          Type: ${addr.addressType}<br>
+          <a href="address.html">Update Address</a>
+        `;
+        proceedBtn.disabled = false; // enable if address exists
+      } else {
+        addressDisplay.innerHTML = 'No address added yet.<br><a href="address.html">Add Address →</a>';
+        proceedBtn.disabled = true;
       }
+    }
+
+    // Proceed to payment
+    document.getElementById('proceed-payment-btn').addEventListener('click', () => {
+      if (getCart().length === 0) {
+        showToast('Your cart is empty!', 'error');
+        return;
+      }
+      window.location.href = 'payment.html';
     });
 
-    // Continue to payment...
-  });
-
-  async function loadSavedAddresses() {
-    // ... your load function ...
-  }
-</script>
+    // Load page
+    document.addEventListener('DOMContentLoaded', updateCheckoutPage);
+  </script>
 </body>
 </html>

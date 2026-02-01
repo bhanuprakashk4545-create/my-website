@@ -173,3 +173,11 @@ function handleCheckout() {
     
     window.location.href = 'checkout.html';
 }
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart') || '[]');
+}
+
+function clearCart() {
+  localStorage.removeItem('cart');
+  updateCartCount(); // if you have this function
+}

@@ -2,40 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyShop - Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Payment</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#f8f9fa; min-height:100vh; }
-    .container { max-width: 800px; margin: 2rem auto; padding: 1rem; }
-    .payment-box, .success-box {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.12);
-      text-align: center;
+    .payment-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
-    .amount { font-size: 3.2rem; font-weight: bold; color: #28a745; margin: 1rem 0; }
-    .qr-section { margin: 2rem 0; }
-    .qr-code { max-width: 280px; margin: 1.5rem auto; border: 10px solid #fff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-    .instructions { font-size: 1.15rem; line-height: 1.7; color: #333; margin: 1.5rem 0; }
-    .btn {
+
+    .payment-options, .order-summary {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .option {
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .option:hover, .option.active {
+      border-color: #28a745;
+      background: #f0fff4;
+    }
+
+    .option label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .payment-form {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .payment-form.active {
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.9rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .upi-qr {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .upi-qr img {
+      max-width: 220px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+    }
+
+    .pay-btn {
+      width: 100%;
+      padding: 1.2rem;
       background: #28a745;
       color: white;
       border: none;
-      padding: 1rem 2.5rem;
-      font-size: 1.2rem;
       border-radius: 8px;
+      font-size: 1.3rem;
+      font-weight: bold;
       cursor: pointer;
-      margin: 0.8rem;
-      display: inline-block;
-      text-decoration: none;
     }
-    .btn:hover { background: #218838; }
-    .btn-secondary { background: #6c757d; }
-    .btn-secondary:hover { background: #5a6268; }
-    #payment-content { display: block; }
-    #success-msg { display: none; }
+
+    .pay-btn:hover {
+      background: #218838;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.9rem 1.8rem;
+      background: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .back-btn:hover {
+      background: #5a6268;
+    }
+
+    #payment-message {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+
+    @media (max-width: 768px) {
+      .payment-container {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -58,80 +145,162 @@
     </nav>
   </header>
 
-  <div class="container">
-    <!-- Payment Section -->
-    <div id="payment-content" class="payment-box">
-      <h1>Complete Payment</h1>
-      <div class="amount" id="amount">₹0.00</div>
+  <!-- Checkout → Payment -->
+  <main class="payment-container">
 
-      <div class="qr-section">
-        <h3>Pay Using UPI QR Code</h3>
-        <p>Scan with Google Pay, PhonePe, Paytm or any UPI app</p>
-        
-        <!-- Change src to your real QR image file name -->
-        <img src="./images/photo.jpeg" alt="Your UPI QR Code" class="qr-code">
+    <!-- Payment Options -->
+    <div class="payment-options">
+      <h2>Select Payment Method</h2>
 
-        <div class="instructions">
-          <strong>Steps to pay:</strong><br>
-          1. Open your UPI app<br>
-          2. Scan the QR code above<br>
-          3. Enter amount: ₹<span id="qr-amount">0.00</span><br>
-          4. Complete the payment<br><br>
-          Once done, click the button below
+      <div class="option" data-method="upi">
+        <label>
+          <input type="radio" name="payment-method" value="upi">
+          UPI (Google Pay, PhonePe, Paytm)
+        </label>
+        <div class="payment-form" id="upi-form">
+          <div class="upi-qr">
+            <img src="./images/photo.jpeg" alt="UPI QR Code">
+            <p style="margin-top:1rem;">UPI ID: <strong>9591191788@fam</strong></p>
+            <p>Scan & Pay any amount</p>
+          </div>
+          <button class="pay-btn" onclick="simulatePayment('UPI')">Pay Now</button>
         </div>
       </div>
 
-      <button class="btn" id="i-have-paid">I Have Made the Payment</button>
-    </div>
+      <div class="option" data-method="card">
+        <label>
+          <input type="radio" name="payment-method" value="card">
+          Credit / Debit Card
+        </label>
+        <div class="payment-form" id="card-form">
+          <input type="text" placeholder="Card Number" maxlength="16">
+          <input type="text" placeholder="MM / YY" maxlength="5">
+          <input type="text" placeholder="CVV" maxlength="3">
+          <button class="pay-btn" onclick="simulatePayment('Card')">Pay Now</button>
+        </div>
+      </div>
 
-    <!-- Success Section (hidden at first) -->
-    <div id="success-msg" class="success-box">
-      <h2 style="color:#28a745; margin-bottom:1rem;">🎉 Thank You! Order Placed Successfully</h2>
-      <p style="font-size:1.2rem; margin:1.5rem 0;">
-        Your payment has been received.<br>
-        We will process your order and notify you soon.
-      </p>
-      <p style="font-size:1.4rem; font-weight:bold;" id="success-total">Total: ₹0.00</p>
+      <div class="option" data-method="netbanking">
+        <label>
+          <input type="radio" name="payment-method" value="netbanking">
+          Net Banking
+        </label>
+        <div class="payment-form" id="netbanking-form">
+          <select>
+            <option>Select Bank</option>
+            <option>HDFC Bank</option>
+            <option>ICICI Bank</option>
+            <option>SBI</option>
+            <option>Axis Bank</option>
+          </select>
+          <button class="pay-btn" onclick="simulatePayment('Net Banking')">Pay Now</button>
+        </div>
+      </div>
 
-      <div style="margin-top:2.5rem;">
-        <a href="products.html" class="btn">Shop More</a>
-        <a href="index.html" class="btn btn-secondary">Back to Home</a>
+      <div class="option" data-method="wallet">
+        <label>
+          <input type="radio" name="payment-method" value="wallet">
+          Wallet (Paytm / Amazon Pay)
+        </label>
+        <div class="payment-form" id="wallet-form">
+          <input type="text" placeholder="Wallet Mobile Number">
+          <button class="pay-btn" onclick="simulatePayment('Wallet')">Pay Now</button>
+        </div>
+      </div>
+
+      <div class="option" data-method="cod">
+        <label>
+          <input type="radio" name="payment-method" value="cod">
+          Cash on Delivery
+        </label>
+        <div class="payment-form" id="cod-form">
+          <p style="color:#555;">₹50 extra charge for COD</p>
+          <button class="pay-btn" onclick="simulatePayment('Cash on Delivery')">Confirm Order</button>
+        </div>
       </div>
     </div>
-  </div>
 
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <div id="cart-items"></div>
+      <div class="total">
+        Total Amount: <span id="grand-total">₹0.00</span>
+      </div>
+      <div style="margin-top: 2rem; text-align: right;">
+  <a href="checkout.html" class="proceed-btn">Proceed to Checkout</a>
+</div>
+
+      <a href="cart.html" class="back-btn">← Back to Cart</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Update cart count in navbar
-      if (typeof updateCartCount === 'function') {
-        updateCartCount();
+    // Toggle payment forms
+    document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.querySelectorAll('.payment-form').forEach(form => form.classList.remove('active'));
+        const formId = this.value + '-form';
+        document.getElementById(formId)?.classList.add('active');
+      });
+    });
+
+    // Load cart & calculate total
+    function updateCheckoutSummary() {
+      const cart = getCart() || [];
+      const container = document.getElementById('cart-items');
+      const totalEl = document.getElementById('grand-total');
+
+      container.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666;">Your cart is empty.</p>';
+        totalEl.textContent = '₹0.00';
+        return;
       }
 
-      // Load total amount
-      const subtotal = localStorage.getItem('checkoutSubtotal') || '0.00';
-      document.getElementById('amount').textContent = `₹${subtotal}`;
-      document.getElementById('qr-amount').textContent = subtotal;
-      document.getElementById('success-total').textContent = `Total: ₹${subtotal}`;
-
-      // When user clicks "I Have Made the Payment"
-      document.getElementById('i-have-paid').addEventListener('click', () => {
-        // Hide payment section
-        document.getElementById('payment-content').style.display = 'none';
-
-        // Show success section
-        document.getElementById('success-msg').style.display = 'block';
-
-        // Clear cart data
-        localStorage.removeItem('cart');
-        localStorage.removeItem('checkoutSubtotal');
-        localStorage.removeItem('shippingAddress');
-
-        // Update cart count
-        if (typeof updateCartCount === 'function') {
-          updateCartCount();
-        }
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <strong>${item.name}</strong> × ${item.quantity}<br>
+          ₹${(item.price * item.quantity).toFixed(2)}
+        `;
+        container.appendChild(div);
       });
+
+      totalEl.textContent = `₹${total.toFixed(2)}`;
+    }
+
+    // Simulate payment success
+    function simulatePayment(method) {
+      showToast(`Payment processing via ${method}...`, 'success');
+      setTimeout(() => {
+        showToast('Payment successful! Order placed.', 'success');
+        clearCart();
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 1500);
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCheckoutSummary();
     });
   </script>
 </body>

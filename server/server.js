@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // API Routes – MUST come BEFORE catch-all
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/addresses', require('./routes/address'));
+app.use('/api/address', require('./routes/address'));
 
 // Catch-all for frontend SPA – MUST be LAST
 app.get('*', (req, res) => {
