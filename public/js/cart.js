@@ -152,3 +152,24 @@ window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
 window.changeQuantity = changeQuantity;
 window.handleCheckout = handleCheckout;
+// Make sure total is updated before redirect
+function handleCheckout() {
+    if (cart.length === 0) {
+        showToast('Your cart is empty!', 'error');
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showToast('Please login to proceed to checkout', 'error');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
+        return;
+    }
+
+    // Force save latest cart state
+    saveCartAndUpdateUI();
+    
+    window.location.href = 'checkout.html';
+}

@@ -458,3 +458,30 @@ footer {
   transform: translateY(-10px);
   box-shadow: 0 15px 35px rgba(0,0,0,0.18);
 }
+.product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.product-image-wrapper {
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.short-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;       /* show max 3 lines */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

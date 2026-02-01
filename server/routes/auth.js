@@ -1,16 +1,10 @@
-// server/routes/auth.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-// Secret key (better to move to .env)
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_change_this_very_strong_random_string';
-
-// Register route (already working - kept as is)
+// Register route (keep this - it's working)
 router.post('/register', async (req, res) => {
-  console.log('POST /api/auth/register received → Body:', req.body);
-
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -19,68 +13,80 @@ router.post('/register', async (req, res) => {
 
   try {
     let user = await User.findOne({ email });
-    if (user) {
-      console.log('User already exists:', email);
-      return res.status(400).json({ message: 'User already exists' });
-    }
+    if (user) return res.status(400).json({ message: 'User already exists' });
 
-    console.log('Creating new user...');
     user = new User({ name, email, password });
-
     await user.save();
-    console.log('User saved successfully:', user.email);
 
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ message: 'Registered successfully' });
   } catch (err) {
-    console.error('REGISTRATION ERROR DETAILS:', err.stack || err);
-    res.status(500).json({ message: 'Server error during registration: ' + (err.message || 'Unknown error') });
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Login route - FIXED to include isAdmin in token
+// Login route - this fixes your issue
 router.post('/login', async (req, res) => {
-  console.log('POST /api/auth/login received → Body:', req.body);
+  console.log('LOGIN REQUEST RECEIVED:', req.body);
 
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password required' });
+    return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // FIXED: Include isAdmin in the token payload
     const token = jwt.sign(
-      {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin   // ← This line was missing or commented out
-      },
+      { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin },
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
 
-    console.log('Login successful for:', email);
-    console.log('Token payload includes isAdmin:', user.isAdmin);
-
     res.json({
       message: 'Login successful',
       token,
-      user: { name: user.name, email: user.email, isAdmin: user.isAdmin }
+      user: { name: user.name, email: user.email }
     });
   } catch (err) {
-    console.error('LOGIN ERROR DETAILS:', err.stack || err);
-    res.status(500).json({ message: 'Server error during login: ' + (err.message || 'Unknown') });
+    console.error('LOGIN ERROR:', err);
+    res.status(500).json({ message: 'Server error during login' });
+  }
+});
+router.post('/login', async (req, res) => {
+  console.log('LOGIN REQUEST:', req.body);
+
+  const { email, password } = req.body;
+
+  if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign(
+      { id: user._id.toString(), email: user.email, name: user.name, isAdmin: user.isAdmin || false },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+
+    console.log('LOGIN SUCCESS - Token created for user ID:', user._id);
+    res.json({ message: 'Login successful', token });
+  } catch (err) {
+    console.error('LOGIN ERROR:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
