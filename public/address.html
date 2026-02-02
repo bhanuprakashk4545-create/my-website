@@ -117,48 +117,57 @@
   <div id="toast-container"></div>
 
   <script>
-    document.getElementById('address-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+  document.getElementById('address-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const address = {
-        fullName: document.getElementById('fullName').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        addressLine: document.getElementById('addressLine').value.trim(),
-        landmark: document.getElementById('landmark').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        state: document.getElementById('state').value.trim(),
-        pincode: document.getElementById('pincode').value.trim(),
-        addressType: document.getElementById('addressType').value
-      };
+    const address = {
+      fullName: document.getElementById('fullName').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      addressLine: document.getElementById('addressLine').value.trim(),
+      landmark: document.getElementById('landmark').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      state: document.getElementById('state').value.trim(),
+      pincode: document.getElementById('pincode').value.trim(),
+      addressType: document.getElementById('addressType').value
+    };
 
+    const msgDiv = document.getElementById('message');
+    msgDiv.style.display = 'block';
+
+    try {
+      const res = await fetch('https://my-shop-one-rho.vercel.app/api/address', {  // ← use your real Vercel domain
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(address)
+      });
+
+      const text = await res.text();  // Get raw response first
+      console.log('Raw server response:', text); // ← check this in browser console
+
+      let data;
       try {
-        const res = await fetch('https://my-shop-one-rho.vercel.app/api/address', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(address)
-        });
-
-        const data = await res.json();
-
-        const msgDiv = document.getElementById('message');
-        msgDiv.style.display = 'block';
-
-        if (res.ok) {
-  msgDiv.className = 'success';
-  msgDiv.textContent = 'Address saved successfully!';
-  localStorage.setItem('savedAddress', JSON.stringify(address)); // ← add this
-  document.getElementById('address-form').reset();
-  }  else {
-          msgDiv.className = 'error';
-          msgDiv.textContent = data.message || 'Failed to save address';
-        }
-      } catch (err) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.style.display = 'block';
+        data = JSON.parse(text);
+      } catch {
         msgDiv.className = 'error';
-        msgDiv.textContent = 'Network error: ' + err.message;
+        msgDiv.textContent = 'Server returned invalid response';
+        return;
       }
-    });
-  </script>
+
+      if (res.ok) {
+        msgDiv.className = 'success';
+        msgDiv.textContent = data.message || 'Address saved successfully!';
+        localStorage.setItem('savedAddress', JSON.stringify(address));
+        document.getElementById('address-form').reset();
+      } else {
+        msgDiv.className = 'error';
+        msgDiv.textContent = data.message || 'Failed to save address (server error)';
+      }
+    } catch (err) {
+      msgDiv.className = 'error';
+      msgDiv.textContent = 'Network error: ' + err.message;
+      console.error('Fetch error:', err);
+    }
+  });
+</script>
 </body>
 </html>
