@@ -117,6 +117,22 @@
   <div id="toast-container"></div>
 
   <script>
+  // Load existing address for edit (if saved)
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('savedAddress');
+    if (saved) {
+      const addr = JSON.parse(saved);
+      document.getElementById('fullName').value = addr.fullName || '';
+      document.getElementById('phone').value = addr.phone || '';
+      document.getElementById('addressLine').value = addr.addressLine || '';
+      document.getElementById('landmark').value = addr.landmark || '';
+      document.getElementById('city').value = addr.city || '';
+      document.getElementById('state').value = addr.state || '';
+      document.getElementById('pincode').value = addr.pincode || '';
+      document.getElementById('addressType').value = addr.addressType || '';
+    }
+  });
+
   document.getElementById('address-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -135,14 +151,20 @@
     msgDiv.style.display = 'block';
 
     try {
-      const res = await fetch('https://my-shop-one-rho.vercel.app/api/address', {  // ← use your real Vercel domain
-        method: 'POST',
+      const saved = localStorage.getItem('savedAddress');
+      const id = saved ? JSON.parse(saved)._id : null;
+      const url = id ? `https://my-shop-one-rho.vercel.app/api/address/${id}` : 'https://your-vercel-domain.vercel.app/api/address';
+
+      const method = id ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(address)
       });
 
-      const text = await res.text();  // Get raw response first
-      console.log('Raw server response:', text); // ← check this in browser console
+      const text = await res.text();
+      console.log('Raw server response:', text);
 
       let data;
       try {
@@ -155,12 +177,12 @@
 
       if (res.ok) {
         msgDiv.className = 'success';
-        msgDiv.textContent = data.message || 'Address saved successfully!';
-        localStorage.setItem('savedAddress', JSON.stringify(address));
+        msgDiv.textContent = data.message || (id ? 'Address updated successfully!' : 'Address saved successfully!');
+        localStorage.setItem('savedAddress', JSON.stringify({ ...address, _id: data.id || id }));
         document.getElementById('address-form').reset();
       } else {
         msgDiv.className = 'error';
-        msgDiv.textContent = data.message || 'Failed to save address (server error)';
+        msgDiv.textContent = data.message || 'Failed to save/update address';
       }
     } catch (err) {
       msgDiv.className = 'error';
