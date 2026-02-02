@@ -6,6 +6,7 @@ const path = require('path');
 
 const app = express();
 
+app.use(cors({ origin: '*' })); // temporary – change to your domain later
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

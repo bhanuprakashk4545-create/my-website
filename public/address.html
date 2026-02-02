@@ -153,7 +153,7 @@
     try {
       const saved = localStorage.getItem('savedAddress');
       const id = saved ? JSON.parse(saved)._id : null;
-      const url = id ? `https://my-shop-one-rho.vercel.app/api/address/${id}` : 'https://your-vercel-domain.vercel.app/api/address';
+      const url = id ? `https://my-shop-one-rho.vercel.app/api/address/${id}` : 'https://my-shop-one-rho.vercel.app/api/address';
 
       const method = id ? 'PUT' : 'POST';
 
