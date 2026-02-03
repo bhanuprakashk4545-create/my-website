@@ -67,7 +67,21 @@
         <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" id="login-link">Login / Register</a>
+        <a href="login.html" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 5px 7px;
+    background: linear-gradient(135deg, #66d4ea, #764ba2);
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 6px 20px rgba(102,118,234,0.4);
+    transition: all 0.3s ease;
+  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'" id="login-link">Login / Register</a>
       </div>
     </nav>
   </header>
@@ -81,8 +95,40 @@
       <h1 id="product-name">Loading...</h1>
       <div class="price" id="product-price">₹0.00</div>
       <p class="description" id="product-desc"></p>
-      <button id="add-to-cart-btn" class="add-btn">Add to Cart</button>
-      <p><a href="products.html" style="color:#007bff;">← Back to Products</a></p>
+      <button id="add-to-cart-btn" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 5px 7px;
+    background: linear-gradient(135deg, #ef64cf, #eb1f1f);
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 6px 20px rgba(233, 6, 6, 0.4);
+    transition: all 0.3s ease;
+  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'">Add to Cart</button>
+      <div style="text-align: center; margin: 2.5rem 0;">
+  <a href="products.html" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 5px 7px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 6px 20px rgba(67, 6, 250, 0.4);
+    transition: all 0.3s ease;
+  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'">
+    Back to Products
+  </a>
+</div>
     </div>
   </main>
 
@@ -112,11 +158,12 @@
         document.getElementById('product-price').textContent = `₹${Number(product.price).toFixed(2)}`;
         document.getElementById('product-desc').textContent = product.description || 'No description available.';
         document.getElementById('product-img').src = product.image;
+        document.getElementById('product-desc').textContent = product.description || 'No description available.';
 
         document.getElementById('add-to-cart-btn').onclick = () => {
-          addToCart(product._id, product.name, product.price, product.image);
-          showToast(`Added ${product.name} to cart!`);
-        };
+  addToCart(product._id, product.name, product.price, product.image);
+  // No extra showToast here — it's already inside addToCart()
+};
       } else {
         document.getElementById('product-name').textContent = 'Product not found';
       }

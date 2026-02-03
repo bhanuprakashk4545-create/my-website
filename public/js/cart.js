@@ -20,20 +20,20 @@ function updateCartCount() {
 
 // Add product to cart
 function addToCart(id, name, price, image) {
-    const existing = cart.find(item => item.id === id);
-    if (existing) {
-        existing.quantity = (existing.quantity || 1) + 1;
-    } else {
-        cart.push({
-            id,
-            name,
-            price: Number(price),
-            image: image || '/images/placeholder.jpg',
-            quantity: 1
-        });
-    }
-    saveCartAndUpdateUI();
-    showToast(`Added ${name} to cart!`);
+  let cart = getCart() || [];
+
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ id, name, price, image, quantity: 1 });
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+
+  // Always show notification here — one place only
+  showToast(`Added ${name} to cart!`, 'success');
 }
 
 // Remove item from cart
@@ -177,7 +177,8 @@ function getCart() {
   return JSON.parse(localStorage.getItem('cart') || '[]');
 }
 
-function clearCart() {
-  localStorage.removeItem('cart');
-  updateCartCount(); // if you have this function
+function updateCartCount() {
+  const cart = getCart();
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  document.getElementById('cart-count').textContent = count;
 }

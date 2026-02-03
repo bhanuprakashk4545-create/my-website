@@ -132,7 +132,7 @@
       table.style.display = 'none';
 
       try {
-        const res = await fetch('http://localhost:3000/api/admin/users', {
+        const res = await fetch('https://my-shop-one-rho.vercel.app/api/admin/users', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

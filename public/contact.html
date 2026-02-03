@@ -2,113 +2,188 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Contact Us</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Contact Us</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    .contact-container {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-    }
-    .contact-header {
+    .contact-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8rem 2rem 6rem;
       text-align: center;
-      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
     }
-    .contact-header h1 {
-      font-size: 2.8rem;
+
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.15) 0%, transparent 60%);
+    }
+
+    .contact-hero h1 {
+      font-size: 3.5rem;
       margin-bottom: 1rem;
-      color: #333;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
-    .contact-header p {
-      font-size: 1.2rem;
-      color: #555;
+
+    .contact-hero p {
+      font-size: 1.4rem;
       max-width: 700px;
       margin: 0 auto;
+      opacity: 0.95;
     }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: -4rem auto 0;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
     }
-    .contact-info {
-      background: #f8f9fa;
-      padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid #e0e0e0;
-    }
-    .contact-info h3 {
-      margin-bottom: 1.5rem;
-      color: #007bff;
-    }
-    .info-item {
-      margin-bottom: 1.2rem;
-      font-size: 1.1rem;
-    }
-    .info-item strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      color: #444;
-    }
-    .contact-form {
+
+    .contact-card {
       background: white;
-      padding: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
     }
+
+    .contact-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      color: #667eea;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: #333;
+    }
+
+    .card-text {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .form-section {
+      background: white;
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 4rem;
+    }
+
+    .form-section h2 {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      font-size: 2.2rem;
+      color: #333;
+    }
+
     .form-group {
-      margin-bottom: 1.6rem;
+      margin-bottom: 1.8rem;
     }
-    .form-group label {
+
+    label {
       display: block;
       margin-bottom: 0.6rem;
       font-weight: 600;
       color: #444;
     }
-    .form-group input,
-    .form-group textarea {
+
+    input, textarea {
       width: 100%;
-      padding: 0.9rem 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
       font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
       transition: border 0.3s;
     }
-    .form-group input:focus,
-    .form-group textarea:focus {
+
+    input:focus, textarea:focus {
       outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
     }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
     .submit-btn {
       width: 100%;
-      padding: 1.1rem;
-      background: #007bff;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 1.2rem;
+      border-radius: 10px;
+      font-size: 1.3rem;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s;
     }
+
     .submit-btn:hover {
-      background: #0056b3;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(102,126,234,0.4);
     }
-    #form-result {
+
+    .map-section {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .social-links {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .social-links a {
+      color: #667eea;
+      font-size: 2.2rem;
+      margin: 0 1rem;
+      transition: all 0.3s;
+    }
+
+    .social-links a:hover {
+      color: #764ba2;
+      transform: translateY(-5px);
+    }
+
+    #form-message {
       margin-top: 1.5rem;
       padding: 1.2rem;
-      border-radius: 8px;
-      font-size: 1.1rem;
+      border-radius: 10px;
       text-align: center;
+      font-weight: bold;
     }
-    .success-msg { background: #d4edda; color: #155724; }
-    .error-msg   { background: #f8d7da; color: #721c24; }
+
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+
     @media (max-width: 768px) {
-      .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
+      .contact-hero h1 { font-size: 2.8rem; }
+      .contact-hero p { font-size: 1.3rem; }
+      .form-section { padding: 2rem 1.5rem; }
     }
   </style>
 </head>
@@ -118,69 +193,161 @@
   <header>
     <nav class="navbar">
       <div class="logo">MyShop</div>
-      
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-
       <div class="nav-right">
-        <a href="cart.html" class="cart-link">
-          Cart <span id="cart-count">0</span>
-        </a>
+        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" id="login-link">Login / Register</a>
+        <a href="login.html" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 5px 7px;
+    background: linear-gradient(135deg, #66d4ea, #764ba2);
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 6px 20px rgba(102,118,234,0.4);
+    transition: all 0.3s ease;
+  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'" id="login-link">Login / Register</a>
       </div>
     </nav>
   </header>
 
+  <!-- Hero Section -->
+  <section class="contact-hero">
+    <div class="hero-content">
+      <h1>Get in Touch</h1>
+      <p>We'd love to hear from you! Whether you have a question, feedback, or just want to say hi — we're here.</p>
+    </div>
+  </section>
+
   <!-- Main Content -->
   <main class="contact-container">
 
-    <div class="contact-header">
-      <h1>Get in Touch</h1>
-      <p>We're here to help! Reach out to us with any questions, feedback, or support requests.</p>
-    </div>
-
+    <!-- Contact Info Cards -->
     <div class="contact-grid">
-
-      <!-- Contact Information -->
-      <div class="contact-info">
-        <h3>Contact Information</h3>
-        
-        <div class="info-item">
-          <strong>Address:</strong>
-          MyShop Headquarters<br>
-          123 MG Road, Indiranagar<br>
-          Bengaluru, Karnataka 560038
-        </div>
-
-        <div class="info-item">
-          <strong>Email:</strong>
-          support@myshop.in<br>
-          orders@myshop.in
-        </div>
-
-        <div class="info-item">
-          <strong>Phone:</strong>
-          +91 80 4123 4567<br>
-          Mon–Sat: 10:00 AM – 8:00 PM
-        </div>
-
-        <div class="info-item">
-          <strong>Working Hours:</strong>
-          Monday – Saturday: 10 AM – 8 PM<br>
-          Sunday: Closed
+      <div class="contact-card">
+        <div class="card-icon"><i class="fas fa-phone-volume"></i></div>
+        <div class="card-title">Phone</div>
+        <div class="card-text">
+          +91 98765 43210<br>
+          Mon–Sat: 10 AM – 8 PM
         </div>
       </div>
 
-      <!-- Contact Form -->
-      <div class="contact-form">
-        <h3>Send us a Message</h3>
-        
+      <div class="contact-card">
+        <div class="card-icon"><i class="fas fa-envelope"></i></div>
+        <div class="card-title">Email</div>
+        <div class="card-text">
+          support@myshop.com<br>
+          help@myshop.com
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="card-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="card-title">Address</div>
+        <div class="card-text">
+          MyShop HQ<br>
+          #123, MG Road, Indiranagar<br>
+          Bengaluru, Karnataka 560038
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form & Map -->
+    <div class="form-map-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+      <!-- Form -->
+      <div class="form-section">
+        <h2>Send us a Message</h2>
         <form id="contact-form">
           <div class="form-group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Your name"
+            <input type="text" id="name" required placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" placeholder="98765 43210">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" required placeholder="How can we help you today?"></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+
+        <div id="form-message" style="display:none;"></div>
+      </div>
+
+      <!-- Map -->
+      <div class="map-section">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.027!2d77.640!3d12.9716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae140f6f6f6f6f%3A0x6f6f6f6f6f6f6f6f!2sMG%20Road%2C%20Bengaluru!5e0!3m2!1sen!2sin!4v1730000000000" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="contact.html">Contact Us</a> |
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        message: document.getElementById('message').value.trim()
+      };
+
+      const msgDiv = document.getElementById('form-message');
+      msgDiv.style.display = 'block';
+
+      try {
+        // You can replace with real backend later
+        // For now: simulate success after 1 second
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        msgDiv.className = 'success';
+        msgDiv.textContent = 'Thank you! Your message has been sent. We will get back to you soon.';
+        document.getElementById('contact-form').reset();
+      } catch (err) {
+        msgDiv.className = 'error';
+        msgDiv.textContent = 'Something went wrong. Please try again later.';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -95,11 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Logout handler
-  document.getElementById('logout-btn')?.addEventListener('click', () => {
-    localStorage.removeItem('token');
-    window.location.href = 'index.html';
-  });
+  document.getElementById('logout-btn').addEventListener('click', () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('savedAddress');
+  localStorage.removeItem('cart'); // clear old cart
+  updateCartCount(); // update navbar count to 0
+  showToast('Logged out successfully');
+  window.location.href = 'login.html';
 });
+});
+
 // Animate product cards on scroll / load
 document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.product-card');

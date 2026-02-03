@@ -1,7 +1,4 @@
-// public/js/products.js – with simple product card animations
-
-// Sample data (unchanged)
-// js/products.js
+// public/js/products.js – fixed version with single teaser text & no duplicate toast
 
 const sampleProducts = [
   {
@@ -170,165 +167,163 @@ let allProducts = [];
 let currentSort = 'default';
 
 function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+  const container = document.getElementById('toast-container');
+  if (!container) return;
 
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
 
-    container.appendChild(toast);
+  container.appendChild(toast);
 
-    setTimeout(() => toast.classList.add('show'), 100);
+  setTimeout(() => toast.classList.add('show'), 100);
 
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 function loadProducts() {
-    const container = document.getElementById('products-container');
-    if (!container) return;
+  const container = document.getElementById('products-container');
+  if (!container) return;
 
-    container.innerHTML = '<div class="loading">Loading products...</div>';
+  container.innerHTML = '<div class="loading">Loading products...</div>';
 
-    setTimeout(() => {
-        allProducts = [...sampleProducts];
-        updateProductDisplay();
-    }, 800);
+  setTimeout(() => {
+    allProducts = [...sampleProducts];
+    updateProductDisplay();
+  }, 800);
 }
 
 function sortProducts(products) {
-    let sorted = [...products];
+  let sorted = [...products];
 
-    switch (currentSort) {
-        case 'price-asc':
-            sorted.sort((a, b) => a.price - b.price);
-            break;
-        case 'price-desc':
-            sorted.sort((a, b) => b.price - a.price);
-            break;
-        case 'name-asc':
-            sorted.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-        case 'name-desc':
-            sorted.sort((a, b) => b.name.localeCompare(a.name));
-            break;
-        default:
-            break;
-    }
+  switch (currentSort) {
+    case 'price-asc':
+      sorted.sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      sorted.sort((a, b) => b.price - a.price);
+      break;
+    case 'name-asc':
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'name-desc':
+      sorted.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    default:
+      break;
+  }
 
-    return sorted;
+  return sorted;
 }
 
 function renderProducts(productsToShow) {
-    const container = document.getElementById('products-container');
-    if (!container) return;
+  const container = document.getElementById('products-container');
+  if (!container) return;
 
-    container.innerHTML = '';
+  container.innerHTML = '';
 
-    if (productsToShow.length === 0) {
-        container.innerHTML = '<p style="text-align:center; padding:4rem; color:#666;">No products found.</p>';
+  if (productsToShow.length === 0) {
+    container.innerHTML = '<p style="text-align:center; padding:4rem; color:#666;">No products found.</p>';
+    return;
+  }
+
+  productsToShow.forEach((p, index) => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.style.transitionDelay = `${index * 0.1}s`;
+    card.style.cursor = 'pointer'; // hand cursor on whole card
+
+    card.innerHTML = `
+      <img src="${p.image || '/images/placeholder.jpg'}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p style="color:#007bff; font-size:0.9rem; padding:0 1rem 0.5rem; line-height:1.4; margin:0; font-style:italic;">
+        more details ...
+      </p>
+      <p style="font-weight:bold; color:#28a745; padding:0 1rem;">₹${Number(p.price).toFixed(2)}</p>
+      <button class="add-to-cart"
+              data-id="${p._id}"
+              data-name="${p.name.replace(/"/g, '&quot;')}"
+              data-price="${p.price}"
+              data-image="${p.image || ''}">
+        Add to Cart
+      </button>
+    `;
+
+    // Click anywhere on the card (image, name, teaser text) → open detail page
+    card.addEventListener('click', (e) => {
+      // Don't open detail if clicking Add to Cart button
+      if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
         return;
-    }
-
-    productsToShow.forEach((p, index) => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.style.transitionDelay = `${index * 0.08}s`;
-
-        // Improved card layout
-        card.innerHTML = `
-            <div class="product-image-wrapper">
-                <img src="${p.image || '/images/placeholder.jpg'}" 
-                     alt="${p.name}" 
-                     style="width:100%; height:220px; object-fit:contain; padding:1rem; background:#f9f9f9;"
-                     onclick="window.location.href='product.html?id=${p._id}'">
-            </div>
-            <div class="product-info" style="padding:1rem;">
-                <h3 style="font-size:1.2rem; margin:0 0 0.6rem; height:2.8em; overflow:hidden;">${p.name}</h3>
-                <p class="short-desc" style="font-size:0.95rem; color:#555; line-height:1.5; margin-bottom:1rem; height:4.5em; overflow:hidden;">
-                    ${p.description ? p.description.substring(0, 100) + (p.description.length > 100 ? '...' : '') : 'No description available.'}
-                </p>
-                <p style="font-size:1.3rem; font-weight:bold; color:#28a745; margin:0.8rem 0;">
-                    ₹${Number(p.price).toFixed(0)}
-                </p>
-                <button class="add-to-cart" 
-                        data-id="${p._id}" 
-                        data-name="${p.name.replace(/"/g, '&quot;')}" 
-                        data-price="${p.price}" 
-                        data-image="${p.image || ''}">
-                    Add to Cart
-                </button>
-            </div>
-        `;
-
-        container.appendChild(card);
-
-        // Animation
-        setTimeout(() => card.classList.add('visible'), 50);
+      }
+      window.location.href = `product.html?id=${p._id}`;
     });
 
-    // Re-attach add-to-cart listeners
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            const { id, name, price, image } = e.target.dataset;
-            addToCart(id, name, Number(price), image);
-            showToast(`Added ${name} to cart!`);
-        });
-    });
+    // Add to Cart button works normally
+    card.querySelector('.add-to-cart').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const { id, name, price, image } = e.target.dataset;
+  addToCart(id, name, Number(price), image);
+  // REMOVE any showToast line here — it's now in cart.js
+});
+
+    container.appendChild(card);
+
+    // Trigger fade-in animation
+    setTimeout(() => card.classList.add('visible'), 100);
+  });
 }
 
 function updateProductDisplay() {
-    const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
-    const activeBtn = document.querySelector('.filter-btn.active');
-    const category = activeBtn ? activeBtn.dataset.category : 'all';
+  const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
+  const activeBtn = document.querySelector('.filter-btn.active');
+  const category = activeBtn ? activeBtn.dataset.category : 'all';
 
-    let filtered = allProducts;
+  let filtered = allProducts;
 
-    if (category !== 'all') {
-        filtered = filtered.filter(p => 
-            (p.category || '').toLowerCase() === category.toLowerCase()
-        );
-    }
+  if (category !== 'all') {
+    filtered = filtered.filter(p => 
+      (p.category || '').toLowerCase() === category.toLowerCase()
+    );
+  }
 
-    if (searchTerm) {
-        filtered = filtered.filter(p => 
-            p.name.toLowerCase().includes(searchTerm) ||
-            (p.description || '').toLowerCase().includes(searchTerm)
-        );
-    }
+  if (searchTerm) {
+    filtered = filtered.filter(p => 
+      p.name.toLowerCase().includes(searchTerm) ||
+      (p.description || '').toLowerCase().includes(searchTerm)
+    );
+  }
 
-    const sorted = sortProducts(filtered);
-    renderProducts(sorted);
+  const sorted = sortProducts(filtered);
+  renderProducts(sorted);
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    if (!document.getElementById('products-container')) return;
+  if (!document.getElementById('products-container')) return;
 
-    loadProducts();
+  loadProducts();
 
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', updateProductDisplay);
-    }
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', updateProductDisplay);
+  }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateProductDisplay();
-        });
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateProductDisplay();
     });
+  });
 
-    const sortSelect = document.getElementById('sort-select');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', e => {
-            currentSort = e.target.value;
-            updateProductDisplay();
-        });
-    }
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', e => {
+      currentSort = e.target.value;
+      updateProductDisplay();
+    });
+  }
 });
