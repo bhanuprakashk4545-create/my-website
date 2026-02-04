@@ -6,20 +6,14 @@ const Order = require('../models/Order');
 // Create new order with payment details
 router.post('/', async (req, res) => {
   try {
-    // Optional: force status to Completed if payment succeeded
-    req.body.status = req.body.status || 'Completed';
-
-    console.log('Saving order:', req.body);
+    console.log('Vercel received order:', JSON.stringify(req.body, null, 2));
 
     const newOrder = new Order(req.body);
     await newOrder.save();
 
-    res.status(201).json({
-      message: 'Order placed successfully',
-      orderId: newOrder._id
-    });
+    res.status(201).json({ message: 'Order placed', orderId: newOrder._id });
   } catch (err) {
-    console.error('Order error:', err);
+    console.error('Vercel order error:', err.message, err.stack);
     res.status(500).json({ message: 'Server error: ' + err.message });
   }
 });

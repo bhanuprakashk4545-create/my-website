@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (token && userStatus) {
     // Optional: fetch user info from backend
-    fetch('http://localhost:3000/api/auth/me', {
+    fetch('https://my-shop-one-rho.vercel.app/api/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(res => res.json())
