@@ -1,50 +1,43 @@
-// server/routes/order.js
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 
-// Create new order with payment details
+// POST /api/order
 router.post('/', async (req, res) => {
   try {
-    console.log('Received order:', JSON.stringify(req.body, null, 2)); // debug
+    // Log EVERYTHING received from frontend
+    console.log('=== NEW ORDER REQUEST RECEIVED ===');
+    console.log('Full body:', JSON.stringify(req.body, null, 2));
 
+    // Create new order instance
     const newOrder = new Order(req.body);
 
-    // IMPORTANT: await the save!
-    await newOrder.save();
+    // Log the instance before saving
+    console.log('New Order instance created:', JSON.stringify(newOrder.toObject(), null, 2));
 
-    console.log('Order saved successfully, ID:', newOrder._id); // debug
+    // Force await save – this is the critical line
+    const savedOrder = await newOrder.save();
+
+    // Log success
+    console.log('ORDER SAVED SUCCESSFULLY');
+    console.log('Saved Order ID:', savedOrder._id.toString());
 
     res.status(201).json({
       message: 'Order placed successfully',
-      orderId: newOrder._id.toString()
+      orderId: savedOrder._id.toString()
     });
   } catch (err) {
-    console.error('Order save failed:', err.message);
-    console.error(err.stack); // full stack for debugging
+    // Log FULL error details
+    console.error('=== ORDER SAVE FAILED ===');
+    console.error('Error message:', err.message);
+    console.error('Full error stack:', err.stack);
+    console.error('Validation errors (if any):', err.errors);
 
     res.status(500).json({
       message: 'Failed to save order',
-      error: err.message // optional – helps frontend show better message
+      error: err.message,
+      details: err.errors ? Object.keys(err.errors) : 'No details'
     });
-  }
-});
-// Get my orders with populated user details
-router.get('/my', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'No token' });
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-
-    const orders = await Order.find({ userId })
-      .populate('userId', 'name email')  // ← this line adds name & email
-      .sort({ createdAt: -1 });
-
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
   }
 });
 
