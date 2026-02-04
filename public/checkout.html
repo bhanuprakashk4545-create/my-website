@@ -286,115 +286,129 @@
   <script src="js/cart.js"></script>
 
   <script>
-    // Update checkout page with real cart data + quantity/remove + address check
-    function updateCheckoutPage() {
-  const cart = getCart() || [];
-  const itemsContainer = document.getElementById('cart-items');
-  const emptyMsg = document.getElementById('empty-cart-msg');
-  const subtotalEl = document.getElementById('subtotal');
-  const subtotalSummary = document.getElementById('subtotal-summary');
-  const grandTotalEl = document.getElementById('grand-total');
-  const proceedBtn = document.getElementById('proceed-payment-btn');
-  const addressDisplay = document.getElementById('address-display');
+  // Update checkout page with real cart data + quantity/remove + address check
+  function updateCheckoutPage() {
+    const cart = getCart() || [];
+    const itemsContainer = document.getElementById('cart-items');
+    const emptyMsg = document.getElementById('empty-cart-msg');
+    const subtotalEl = document.getElementById('subtotal');
+    const subtotalSummary = document.getElementById('subtotal-summary');
+    const grandTotalEl = document.getElementById('grand-total');
+    const proceedBtn = document.getElementById('proceed-payment-btn');
+    const addressDisplay = document.getElementById('address-display');
 
-  itemsContainer.innerHTML = '';
-  let subtotal = 0;
+    itemsContainer.innerHTML = '';
+    let subtotal = 0;
 
-  if (cart.length === 0) {
-    emptyMsg.style.display = 'block';
-    subtotalEl.textContent = '₹0.00';
-    subtotalSummary.textContent = '₹0.00';
-    grandTotalEl.textContent = '₹0.00';
-    proceedBtn.disabled = true;
-    proceedBtn.textContent = 'Proceed to Payment';
-    return;
-  }
-
-  emptyMsg.style.display = 'none';
-
-  cart.forEach((item, index) => {
-    const itemTotal = item.price * item.quantity;
-    subtotal += itemTotal;
-
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-      <div class="item-info">
-        <div class="item-name">${item.name}</div>
-        <div class="item-price">₹${item.price.toFixed(2)}</div>
-      </div>
-      <div class="quantity-controls">
-        <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
-        <span class="qty-display">${item.quantity}</span>
-        <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
-      </div>
-      <div class="item-total">₹${itemTotal.toFixed(2)}</div>
-      <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-    `;
-    itemsContainer.appendChild(div);
-  });
-
-  subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-  subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
-  grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-
-  // Address check & button enable/disable logic
-  const savedAddress = localStorage.getItem('savedAddress');
-  if (savedAddress) {
-    const addr = JSON.parse(savedAddress);
-    addressDisplay.innerHTML = `
-      <strong>Type:</strong> ${addr.addressType || 'Not specified'}<br>
-      ${addr.fullName}<br>
-      ${addr.addressLine}<br>
-      ${addr.city}, ${addr.state} - ${addr.pincode}<br>
-      Phone: ${addr.phone}<br>
-      <a href="address.html" style="color:#007bff; font-weight:bold;">Update Address</a>
-    `;
-    proceedBtn.disabled = false;
-    proceedBtn.textContent = 'Proceed to Payment →';
-  } else {
-    addressDisplay.innerHTML = 'No address added yet.<br><a href="address.html" style="color:#007bff; font-weight:bold;">Add Address →</a>';
-    proceedBtn.disabled = true;
-    proceedBtn.textContent = 'Add Address First';
-  }
-}
-
-    // Change quantity
-    function changeQuantity(index, change) {
-      const cart = getCart();
-      cart[index].quantity += change;
-      if (cart[index].quantity < 1) cart[index].quantity = 1;
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCheckoutPage();
-      updateCartCount();
+    if (cart.length === 0) {
+      emptyMsg.style.display = 'block';
+      subtotalEl.textContent = '₹0.00';
+      subtotalSummary.textContent = '₹0.00';
+      grandTotalEl.textContent = '₹0.00';
+      proceedBtn.disabled = true;
+      proceedBtn.textContent = 'Proceed to Payment';
+      return;
     }
 
-    // Remove item
-    function removeItem(index) {
-      let cart = getCart();
-      cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCheckoutPage();
-      updateCartCount();
-      showToast('Item removed from cart');
-    }
+    emptyMsg.style.display = 'none';
 
-    // Proceed to payment
-    document.getElementById('proceed-payment-btn').addEventListener('click', () => {
-      if (getCart().length === 0) {
-        showToast('Your cart is empty!', 'error');
-        return;
-      }
-      if (!localStorage.getItem('savedAddress')) {
-        showToast('Please add delivery address first!', 'error');
-        return;
-      }
-      window.location.href = 'payment.html';
+    cart.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      subtotal += itemTotal;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">₹${item.price.toFixed(2)}</div>
+        </div>
+        <div class="quantity-controls">
+          <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+          <span class="qty-display">${item.quantity}</span>
+          <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+        </div>
+        <div class="item-total">₹${itemTotal.toFixed(2)}</div>
+        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+      `;
+      itemsContainer.appendChild(div);
     });
 
-    // Load page
-    document.addEventListener('DOMContentLoaded', updateCheckoutPage);
-  </script>
+    subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+    subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
+    grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+
+    // Address check & button state
+    const savedAddress = localStorage.getItem('savedAddress');
+    if (savedAddress) {
+      const addr = JSON.parse(savedAddress);
+      addressDisplay.innerHTML = `
+        <strong>Type:</strong> ${addr.addressType || 'Not specified'}<br>
+        ${addr.fullName}<br>
+        ${addr.addressLine}<br>
+        ${addr.city}, ${addr.state} - ${addr.pincode}<br>
+        Phone: ${addr.phone}<br>
+        <a href="address.html" style="color:#007bff; font-weight:bold;">Update Address</a>
+      `;
+      proceedBtn.disabled = false;
+      proceedBtn.textContent = 'Proceed to Payment →';
+    } else {
+      addressDisplay.innerHTML = 'No address added yet.<br><a href="address.html" style="color:#007bff; font-weight:bold;">Add Address →</a>';
+      proceedBtn.disabled = true;
+      proceedBtn.textContent = 'Add Address First';
+    }
+  }
+
+  // Change quantity
+  function changeQuantity(index, change) {
+    const cart = getCart();
+    cart[index].quantity += change;
+    if (cart[index].quantity < 1) cart[index].quantity = 1;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCheckoutPage();
+    updateCartCount();
+  }
+
+  // Remove item
+  function removeItem(index) {
+    let cart = getCart();
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCheckoutPage();
+    updateCartCount();
+    showToast('Item removed from cart');
+  }
+
+  // Proceed to payment
+  document.getElementById('proceed-payment-btn').addEventListener('click', () => {
+    if (getCart().length === 0) {
+      showToast('Your cart is empty!', 'error');
+      return;
+    }
+    if (!localStorage.getItem('savedAddress')) {
+      showToast('Please add delivery address first!', 'error');
+      return;
+    }
+    window.location.href = 'payment.html';
+  });
+
+  // Listen for storage changes (when address saved in another tab)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'savedAddress') {
+      updateCheckoutPage();
+    }
+  });
+
+  // Re-check address when tab becomes visible (after returning from address.html)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      updateCheckoutPage();
+    }
+  });
+
+  // Load page
+  document.addEventListener('DOMContentLoaded', updateCheckoutPage);
+</script>
 </body>
 </html>

@@ -203,6 +203,8 @@
       msgDiv.textContent = 'Network error: ' + err.message;
       console.error('Fetch error:', err);
     }
+    showToast('Address saved! Returning to checkout...', 'success');
+setTimeout(() => window.history.back(), 1500);  // auto go back to previous page
   });
 </script>
 </body>
