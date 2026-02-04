@@ -382,7 +382,7 @@ document.getElementById('place-order-btn').addEventListener('click', () => {
 
   console.log('Sending order to backend:', order); // ← debug: see what is sent
 
-  fetch('http://127.0.0.1:3000/api/order', {
+  fetch('https://my-shop-one-rho.vercel.app/api/order', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(order)
