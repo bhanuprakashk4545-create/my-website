@@ -168,7 +168,23 @@
         <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" id="login-link">Login / Register</a>
+        <a href="login.html" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 5px ;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(167,139,250,0.35);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(167,139,250,0.6)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(167,139,250,0.35)'" id="login-link">Login / Register</a>
       </div>
     </nav>
   </header>

@@ -22,14 +22,11 @@ function updateCartCount() {
 function addToCart(id, name, price, image) {
   let cart = getCart() || [];
 
-  const existingItem = cart.find(item => item.id === id);
-
-  if (existingItem) {
-    // Item already exists → increase quantity
-    existingItem.quantity += 1;
-    showToast(`Increased quantity of ${name} to ${existingItem.quantity}`, 'success');
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.quantity += 1;
+    showToast(`Increased quantity of ${name} to ${existing.quantity}`, 'success');
   } else {
-    // New item → add with quantity 1
     cart.push({ id, name, price, image, quantity: 1 });
     showToast(`Added ${name} to cart!`, 'success');
   }
@@ -183,4 +180,8 @@ function updateCartCount() {
   const cart = getCart();
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cart-count').textContent = count;
+}
+function clearCart() {
+  localStorage.removeItem('cart');
+  updateCartCount();
 }

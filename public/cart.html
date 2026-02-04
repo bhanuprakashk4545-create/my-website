@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Cart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyShop - Cart</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
     .cart-container {
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 3rem auto;
       padding: 0 1.5rem;
     }
 
-    h1 {
+    h2 {
       text-align: center;
       margin-bottom: 2rem;
       color: #333;
@@ -38,106 +39,103 @@
 
     .item-name {
       font-weight: 600;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .item-price {
       color: #28a745;
-      font-size: 1.3rem;
       font-weight: bold;
+      font-size: 1.2rem;
     }
 
     .quantity-controls {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .qty-btn {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       background: #f1f3f5;
       border: 1px solid #ddd;
       border-radius: 6px;
       font-size: 1.2rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .qty-btn:hover {
       background: #e9ecef;
     }
 
-    .item-total {
+    .qty-display {
+      width: 60px;
+      text-align: center;
       font-weight: bold;
-      min-width: 100px;
-      text-align: right;
+      font-size: 1.1rem;
     }
 
-    .cart-total {
-      text-align: right;
-      font-size: 1.5rem;
-      margin: 2rem 0;
+    .remove-btn {
+      color: #dc3545;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .remove-btn:hover {
+      text-decoration: underline;
+    }
+
+    .cart-summary {
+      margin-top: 2rem;
       padding: 1.5rem;
       background: #f8f9fa;
       border-radius: 12px;
+      text-align: right;
     }
 
-    .proceed-btn {
-      display: block;
+    .total {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+      margin: 1rem 0;
+    }
+
+    .checkout-btn {
       width: 100%;
       max-width: 300px;
-      margin: 0 auto;
       padding: 1.2rem;
       background: #28a745;
       color: white;
       border: none;
-      border-radius: 25px;
+      border-radius: 8px;
       font-size: 1.3rem;
       font-weight: bold;
       cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: background 0.3s;
+      margin-top: 1rem;
     }
 
-    .proceed-btn:hover {
+    .checkout-btn:hover {
       background: #218838;
-    }
-    .proceed-btn1 {
-      
-      display: block;
-      width: 100%;
-      max-width: 300px;
-      margin: 10px auto;
-      padding: 1.2rem;
-      background: #789805;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 1.3rem;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-
-    .proceed-btn1:hover {
-      background: #b1cc2c;
     }
 
     .empty-cart {
       text-align: center;
-      padding: 5rem 1rem;
       color: #666;
-      font-size: 1.3rem;
+      padding: 4rem 0;
+      font-size: 1.2rem;
     }
 
-    .empty-cart a {
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -157,45 +155,93 @@
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
         <a href="login.html" style="
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 5px 7px;
-    background: linear-gradient(135deg, #66d4ea, #764ba2);
-    color: white;
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: bold;
-    border-radius: 50px;
-    box-shadow: 0 6px 20px rgba(102,118,234,0.4);
-    transition: all 0.3s ease;
-  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
-     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'" id="login-link">Login / Register</a>
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 5px ;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(167,139,250,0.35);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(167,139,250,0.6)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(167,139,250,0.35)'" id="login-link">Login / Register</a>
       </div>
     </nav>
   </header>
 
-  <!-- Cart Page -->
+  <!-- Cart Content -->
   <main class="cart-container">
-    <h1>Your Cart</h1>
+    <h2>Your Cart</h2>
 
     <div id="cart-items"></div>
 
-    <div id="empty-cart" class="empty-cart" style="display: none;">
-      Your cart is empty.<br>
-      <a href="products.html">Continue Shopping →</a>
+    <div id="empty-cart-msg" class="empty-cart" style="display:none;">
+      Your cart is empty. <a style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(248,113,113,0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'" href="products.html">Continue shopping</a>
     </div>
 
-    <div id="cart-total-section" class="cart-total" style="display: none;">
-      <div style="font-size: 1.3rem; margin-bottom: 1rem;">
-        Subtotal: <span id="subtotal">₹0.00</span>
+    <div class="cart-summary" id="cart-summary" style="display:none;">
+      <div class="total">
+        Subtotal: <span id="cart-total">₹0.00</span>
       </div>
-      <div style="font-size: 1.8rem; font-weight: bold; color: #28a745;">
-        Grand Total: <span id="grand-total">₹0.00</span>
-      </div>
-      <a href="products.html" class="proceed-btn1">Continue Shopping </a>
-      <a href="checkout.html" class="proceed-btn">Proceed to Checkout</a>
+      <a href="products.html" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 7px 15px;
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 6px 20px rgba(251,146,60,0.35);
+  transition: all 0.35s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-5px) scale(1.04)'; this.style.boxShadow='0 14px 35px rgba(251,146,60,0.55)'"
+   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 20px rgba(251,146,60,0.35)'" class="back-btn">Continue Shopping</a>
+      <button class="checkout-btn" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 22px 44px;
+  background: linear-gradient(135deg, #34d399, #059669);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(16,185,129,0.5)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(16,185,129,0.3)'" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+
     </div>
+    
+    
   </main>
 
   <!-- Footer -->
@@ -211,30 +257,28 @@
   <script src="js/cart.js"></script>
 
   <script>
-    // Update cart page
     function updateCartPage() {
       const cart = getCart() || [];
       const itemsContainer = document.getElementById('cart-items');
-      const emptyDiv = document.getElementById('empty-cart');
-      const totalSection = document.getElementById('cart-total-section');
-      const subtotalEl = document.getElementById('subtotal');
-      const grandTotalEl = document.getElementById('grand-total');
+      const emptyMsg = document.getElementById('empty-cart-msg');
+      const summary = document.getElementById('cart-summary');
+      const totalEl = document.getElementById('cart-total');
 
       itemsContainer.innerHTML = '';
-      let subtotal = 0;
+      let total = 0;
 
       if (cart.length === 0) {
-        emptyDiv.style.display = 'block';
-        totalSection.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        summary.style.display = 'none';
         return;
       }
 
-      emptyDiv.style.display = 'none';
-      totalSection.style.display = 'block';
+      emptyMsg.style.display = 'none';
+      summary.style.display = 'block';
 
-      cart.forEach(item => {
+      cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
+        total += itemTotal;
 
         const div = document.createElement('div');
         div.className = 'cart-item';
@@ -242,18 +286,58 @@
           <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
           <div class="item-info">
             <div class="item-name">${item.name}</div>
-            <div>₹${item.price.toFixed(2)} × ${item.quantity}</div>
+            <div class="item-price">₹${item.price.toFixed(2)}</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+            <span class="qty-display">${item.quantity}</span>
+            <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
           </div>
           <div class="item-total">₹${itemTotal.toFixed(2)}</div>
+          <button class="remove-btn" onclick="removeItem(${index})" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(248,113,113,0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'">Remove</button>
         `;
         itemsContainer.appendChild(div);
       });
 
-      subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-      grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`; // Free delivery
+      totalEl.textContent = `₹${total.toFixed(2)}`;
     }
 
-    // Run on load
+    // Change quantity
+    function changeQuantity(index, change) {
+      const cart = getCart();
+      cart[index].quantity += change;
+      if (cart[index].quantity < 1) cart[index].quantity = 1;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartPage();
+      updateCartCount();
+    }
+
+    // Remove item
+    function removeItem(index) {
+      let cart = getCart();
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartPage();
+      updateCartCount();
+      showToast('Item removed from cart');
+    }
+
+    // Init
     document.addEventListener('DOMContentLoaded', updateCartPage);
   </script>
 </body>

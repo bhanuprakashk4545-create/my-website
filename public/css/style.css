@@ -493,3 +493,20 @@ footer {
 .payment-form.active {
   display: block;
 }
+.outline-btn {
+  padding: 0.8rem 1.8rem;
+  
+  
+  border: 2px solid #007bff;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.outline-btn:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,123,255,0.3);
+}

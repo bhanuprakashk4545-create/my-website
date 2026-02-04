@@ -4,7 +4,7 @@ const sampleProducts = [
   {
     _id: "1",
     name: "Wireless Earbuds Pro",
-    price: 2499,
+    price: 10,
     image: "https://thumbs.dreamstime.com/b/rostov-don-russia-december-apple-airpods-pro-white-background-wireless-headphones-charging-case-box-close-up-171491430.jpg",
     category: "electronics",
     description: "Premium true wireless earbuds featuring active noise cancellation (ANC), transparency mode, powerful 11mm dynamic drivers for deep bass, IPX4 sweat and water resistance, up to 30 hours total playback with the charging case (6 hours per charge), fast charging (10 minutes = 2 hours), intuitive touch controls, low-latency gaming mode, crystal-clear calls with dual microphones, and ergonomic in-ear fit. Ideal for music lovers, commuters, and fitness enthusiasts."
@@ -160,6 +160,166 @@ const sampleProducts = [
     image: "https://m.media-amazon.com/images/I/61xztIXySgL._AC_UF894,1000_QL80_.jpg",
     category: "electronics",
     description: "Compact wireless keyboard and mouse set with quiet scissor-switch keys, full-size layout with multimedia hotkeys, ergonomic mouse with 1600 DPI adjustable sensor, 2.4GHz USB nano receiver (one for both devices), up to 12 months battery life (AA batteries), auto sleep mode for power saving, spill-resistant keyboard design, and plug-and-play compatibility. Space-saving & reliable for home office, travel, or desktop use."
+  },
+  {
+    _id: "21",
+    name: "Noise Cancelling Headphones",
+    price: 5999,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+    category: "electronics",
+    description: "Over-ear wireless headphones with industry-leading active noise cancellation, 40mm drivers for deep bass and clear mids, up to 30 hours battery life with ANC on, quick charge (10 min = 5 hours), foldable design, built-in mic for calls, touch controls, comfortable memory foam ear cushions. Perfect for travel, work, and immersive listening."
+  },
+  {
+    _id: "22",
+    name: "Mechanical Gaming Keyboard RGB",
+    price: 3499,
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+    category: "electronics",
+    description: "RGB backlit mechanical keyboard with red linear switches, full N-key rollover, durable aluminum frame, customizable per-key RGB lighting, media control knob, anti-ghosting, spill-resistant, detachable USB-C cable, dedicated macro keys. Ideal for gaming and typing enthusiasts."
+  },
+  {
+    _id: "23",
+    name: "4K Action Camera 4K/60fps",
+    price: 8999,
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800",
+    category: "electronics",
+    description: "Waterproof action camera with 4K/60fps video, 20MP photos, 170° super-wide angle, electronic image stabilization (EIS), dual-screen (front + rear), voice control, time-lapse, slow-motion, Wi-Fi & Bluetooth, multiple mounting accessories included. Perfect for vlogging, sports, travel."
+  },
+  {
+    _id: "24",
+    name: "Men's Casual Sneakers",
+    price: 2499,
+    image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800",
+    category: "clothing",
+    description: "Breathable mesh casual sneakers with cushioned EVA midsole, durable rubber outsole, lace-up closure, padded collar & tongue, lightweight design, available in multiple colors. Comfortable for daily wear, walking, casual outings."
+  },
+  {
+    _id: "25",
+    name: "Women's Oversized Hoodie",
+    price: 1799,
+    image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800",
+    category: "clothing",
+    description: "Cozy oversized hoodie with fleece lining, drop shoulders, ribbed cuffs & hem, kangaroo pocket, drawstring hood, soft cotton-poly blend, relaxed fit. Perfect for lounging, casual streetwear, layering in cooler weather."
+  },
+  {
+    _id: "26",
+    name: "Crossbody Sling Bag",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=800",
+    category: "accessories",
+    description: "Compact sling bag with water-resistant nylon, adjustable strap, multiple compartments, front zip pocket, hidden anti-theft pocket, breathable back panel, lightweight design. Ideal for travel, daily commute, outdoor activities."
+  },
+  {
+    _id: "27",
+    name: "Smart LED Strip Lights 5m",
+    price: 1499,
+    image: "https://okos.in/cdn/shop/products/led-mainPic.jpg?v=1606648079",
+    category: "home",
+    description: "5m RGB LED strip with 16 million colors, app control via Wi-Fi, music sync, timer, dimmable, adhesive backing, cuttable every 10cm, compatible with Alexa & Google Home. Perfect for room ambiance, gaming setup, parties."
+  },
+  {
+    _id: "28",
+    name: "Adjustable Dumbbell Set 2-20kg",
+    price: 7999,
+    image: "https://rukminim2.flixcart.com/image/480/640/xif0q/dumbbell/g/t/z/20kg-2kg-x-4-3kg-x-4-dumbbell-combo-set-20-amanfit-original-imahdny8ce7emmjn.jpeg?q=90",
+    category: "fitness",
+    description: "Space-saving adjustable dumbbells (2–20kg each) with quick dial adjustment, ergonomic handle, durable steel plates, protective rubber coating, non-slip grip. Ideal for home workouts, strength training, full-body exercises."
+  },
+  {
+    _id: "29",
+    name: "Ceramic Non-Stick Cookware Set",
+    price: 3499,
+    image: "https://rukminim2.flixcart.com/image/480/640/xif0q/cookware-set/s/k/j/-original-imah8rf6bpuzvqrj.jpeg?q=90",
+    category: "home",
+    description: "10-piece ceramic non-stick cookware set with induction-compatible base, even heat distribution, stay-cool handles, tempered glass lids, PFOA-free coating, dishwasher-safe. Includes fry pans, saucepans, casserole, steamer. Perfect for healthy cooking."
+  },
+  {
+    _id: "30",
+    name: "Noise Cancelling Earbuds",
+    price: 3499,
+    image: "https://www.boat-lifestyle.com/cdn/shop/products/AD411ANC-FI-Black02_8844f4c6-a7dc-49f4-9b0c-c72edf5c03d8_1500x.png?v=1655187800",
+    category: "electronics",
+    description: "True wireless earbuds with hybrid ANC, 10mm drivers, IPX5 sweat resistance, up to 28 hours total battery with case, fast charging, touch controls, low-latency gaming mode, clear calls with ENC, ergonomic fit. Great for workouts, calls, travel."
+  },
+  {
+    _id: "31",
+    name: "Gaming Mouse RGB 16000 DPI",
+    price: 1999,
+    image: "https://m.media-amazon.com/images/I/41p6Z33hQhL._AC_UF1000,1000_QL80_.jpg",
+    category: "electronics",
+    description: "RGB gaming mouse with 16000 DPI optical sensor, 6 programmable buttons, lightweight design, honeycomb shell, ultra-flexible cable, 1000Hz polling rate, ergonomic shape, durable switches. Ideal for FPS, MOBA, and competitive gaming."
+  },
+  {
+    _id: "32",
+    name: "Men's Slim Fit Jeans",
+    price: 1899,
+    image: "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?w=800",
+    category: "clothing",
+    description: "Slim fit stretch jeans with 98% cotton + 2% elastane, 5-pocket design, zip fly, distressed detailing, comfortable mid-rise, durable stitching, available in multiple washes. Perfect for casual and semi-formal looks."
+  },
+  {
+    _id: "33",
+    name: "Travel Neck Pillow Memory Foam",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800",
+    category: "accessories",
+    description: "Ergonomic U-shaped neck pillow with slow rebound memory foam, soft velour cover, adjustable buckle strap, breathable mesh panel, portable & compact, supports head & neck. Ideal for flights, trains, car rides."
+  },
+  {
+    _id: "34",
+    name: "Robot Vacuum Cleaner",
+    price: 14999,
+    image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800",
+    category: "home",
+    description: "Smart robot vacuum with 2000Pa suction, LiDAR navigation, app control, zone cleaning, no-go zones, auto recharge, mopping function, HEPA filter, quiet operation, works with Alexa & Google Home. Keeps floors clean effortlessly."
+  },
+  {
+    _id: "35",
+    name: "Resistance Bands Set 5 Levels",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800",
+    category: "fitness",
+    description: "5-piece resistance bands set (extra light to extra heavy), non-slip handles, door anchor, carrying bag, latex-free options available, perfect for home workouts, physical therapy, strength training, glute activation."
+  },
+  {
+    _id: "36",
+    name: "Digital Kitchen Scale 10kg",
+    price: 799,
+    image: "https://m.media-amazon.com/images/I/51eT5HTNMRL._AC_UF1000,1000_QL80_.jpg",
+    category: "home",
+    description: "High-precision digital kitchen scale (0.1g–10kg), tare function, unit conversion (g/oz/lb/ml), LCD display, stainless steel platform, auto-off, overload protection, sleek design. Perfect for baking, cooking, portion control."
+  },
+  {
+    _id: "37",
+    name: "Portable Mini Projector",
+    price: 9999,
+    image: "https://m.media-amazon.com/images/I/51GTqntMW8L.jpg",
+    category: "electronics",
+    description: "1080p mini projector with 200 ANSI lumens, built-in speaker, Wi-Fi & Bluetooth, HDMI/USB ports, keystone correction, up to 200-inch screen, compact & portable, supports Netflix/YouTube via mirroring. Great for home theater, gaming."
+  },
+  {
+    _id: "38",
+    name: "Women's Sports Leggings High Waist",
+    price: 1299,
+    image: "https://www.berrylush.com/cdn/shop/products/1_39c90e26-9549-4c88-af86-d0f9a94c24f9.jpg?v=1750071838",
+    category: "clothing",
+    description: "High-waist compression leggings with squat-proof fabric, moisture-wicking, 4-way stretch, side pockets, seamless design, flattering ruched back, available in multiple colors. Perfect for gym, yoga, running, casual wear."
+  },
+  {
+    _id: "39",
+    name: "Insulated Lunch Box 3 Compartments",
+    price: 899,
+    image: "https://m.media-amazon.com/images/I/71s5Xn6BUVL._AC_UF894,1000_QL80_.jpg",
+    category: "home",
+    description: "3-compartment insulated lunch box with leak-proof design, removable divider, stainless steel inner layer, keeps food hot/cold 6+ hours, microwave & dishwasher safe (container only), includes spoon & fork, carry bag. Ideal for office, school, travel."
+  },
+  {
+    _id: "40",
+    name: "True Wireless Earbuds Bass Boost",
+    price: 1999,
+    image: "https://m.media-amazon.com/images/I/41ajZ0GWisL._AC_UF1000,1000_QL80_.jpg",
+    category: "electronics",
+    description: "TWS earbuds with powerful bass, 13mm drivers, IPX5 water resistance, up to 32 hours total battery with case, fast charging, touch controls, ENC for clear calls, gaming low-latency mode, ergonomic fit. Great for music, calls, workouts."
   }
 ];
 
@@ -243,13 +403,9 @@ function renderProducts(productsToShow) {
         more details ...
       </p>
       <p style="font-weight:bold; color:#28a745; padding:0 1rem;">₹${Number(p.price).toFixed(2)}</p>
-      <button class="add-to-cart"
-              data-id="${p._id}"
-              data-name="${p.name.replace(/"/g, '&quot;')}"
-              data-price="${p.price}"
-              data-image="${p.image || ''}">
-        Add to Cart
-      </button>
+      <button class="add-to-cart outline-btn" data-id="${p._id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-price="${p.price}" data-image="${p.image}">
+  <i class="fas fa-cart-plus"></i> Add to Cart
+</button>
     `;
 
     // Click anywhere on the card (image, name, teaser text) → open detail page
