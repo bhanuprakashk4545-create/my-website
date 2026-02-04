@@ -43,20 +43,9 @@
       border-radius: 8px;
     }
 
-    .item-info {
-      flex: 1;
-    }
-
-    .item-name {
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    .item-price {
-      color: #28a745;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; margin-bottom: 0.4rem; }
+    .item-price { color: #28a745; font-weight: bold; font-size: 1.2rem; }
 
     .quantity-controls {
       display: flex;
@@ -78,9 +67,7 @@
       justify-content: center;
     }
 
-    .qty-btn:hover {
-      background: #e9ecef;
-    }
+    .qty-btn:hover { background: #e9ecef; }
 
     .qty-display {
       width: 50px;
@@ -97,9 +84,7 @@
       padding: 0;
     }
 
-    .remove-btn:hover {
-      text-decoration: underline;
-    }
+    .remove-btn:hover { text-decoration: underline; }
 
     .summary-item {
       display: flex;
@@ -116,28 +101,35 @@
       margin-top: 1rem;
     }
 
-    .place-order-btn {
-      width: 100%;
-      padding: 1.2rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.3rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 1.5rem;
-      transition: background 0.3s;
-    }
+    .proceed-btn {
+    width: 100%;
+    max-width: 280px;
+    margin: 1.8rem auto 1rem;
+    padding: 1rem 2rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(40,167,69,0.25);
+    transition: all 0.25s ease;
+    display: block;
+  }
 
-    .place-order-btn:hover {
-      background: #0056b3;
-    }
+  .proceed-btn:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(40,167,69,0.4);
+  }
 
-    .place-order-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
+  .proceed-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.8;
+  }
 
     .address-box {
       background: #f8f9fa;
@@ -146,6 +138,13 @@
       margin-bottom: 2rem;
       font-size: 1.1rem;
       line-height: 1.6;
+    }
+    .address-display {
+      padding: 50px ;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+      background-color: #dc3545;
     }
 
     .back-btn {
@@ -158,9 +157,7 @@
       border-radius: 8px;
     }
 
-    .back-btn:hover {
-      background: #5a6268;
-    }
+    .back-btn:hover { background: #5a6268; }
 
     .empty-cart {
       text-align: center;
@@ -169,43 +166,8 @@
     }
 
     @media (max-width: 768px) {
-      .checkout-container {
-        grid-template-columns: 1fr;
-      }
-      .cart-item {
-        flex-direction: column;
-        text-align: center;
-      }
-      .proceed-btn {
-  width: 100%;
-  max-width: 300px;              /* limits width so it doesn't stretch full on large screens */
-  margin: 1.5rem auto 0;         /* centers it */
-  padding: 1.2rem 2.5rem;
-  background: linear-gradient(135deg, #28a745, #218838);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1.4rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(40,167,69,0.3);
-  transition: all 0.3s ease;
-  display: block;
-  text-align: center;
-}
-
-.proceed-btn:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(40,167,69,0.5);
-  background: linear-gradient(135deg, #218838, #1e7e34);
-}
-
-.proceed-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
+      .checkout-container { grid-template-columns: 1fr; }
+      .cart-item { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
@@ -285,76 +247,79 @@
   <script src="js/cart.js"></script>
 
   <script>
-    // Update checkout page with real cart data + quantity controls + remove
+    // Update checkout page with real cart data + quantity/remove + address check
     function updateCheckoutPage() {
-      const cart = getCart() || [];
-      const itemsContainer = document.getElementById('cart-items');
-      const emptyMsg = document.getElementById('empty-cart-msg');
-      const subtotalEl = document.getElementById('subtotal');
-      const subtotalSummary = document.getElementById('subtotal-summary');
-      const grandTotalEl = document.getElementById('grand-total');
-      const proceedBtn = document.getElementById('proceed-payment-btn');
-      const addressDisplay = document.getElementById('address-display');
+  const cart = getCart() || [];
+  const itemsContainer = document.getElementById('cart-items');
+  const emptyMsg = document.getElementById('empty-cart-msg');
+  const subtotalEl = document.getElementById('subtotal');
+  const subtotalSummary = document.getElementById('subtotal-summary');
+  const grandTotalEl = document.getElementById('grand-total');
+  const proceedBtn = document.getElementById('proceed-payment-btn');
+  const addressDisplay = document.getElementById('address-display');
 
-      itemsContainer.innerHTML = '';
-      let subtotal = 0;
+  itemsContainer.innerHTML = '';
+  let subtotal = 0;
 
-      if (cart.length === 0) {
-        emptyMsg.style.display = 'block';
-        subtotalEl.textContent = '₹0.00';
-        subtotalSummary.textContent = '₹0.00';
-        grandTotalEl.textContent = '₹0.00';
-        proceedBtn.disabled = true;
-        return;
-      }
+  if (cart.length === 0) {
+    emptyMsg.style.display = 'block';
+    subtotalEl.textContent = '₹0.00';
+    subtotalSummary.textContent = '₹0.00';
+    grandTotalEl.textContent = '₹0.00';
+    proceedBtn.disabled = true;
+    proceedBtn.textContent = 'Proceed to Payment';
+    return;
+  }
 
-      emptyMsg.style.display = 'none';
+  emptyMsg.style.display = 'none';
 
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
+  cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    subtotal += itemTotal;
 
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-          <div class="item-info">
-            <div class="item-name">${item.name}</div>
-            <div class="item-price">₹${item.price.toFixed(2)}</div>
-          </div>
-          <div class="quantity-controls">
-            <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
-            <span class="qty-display">${item.quantity}</span>
-            <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
-          </div>
-          <div class="item-total">₹${itemTotal.toFixed(2)}</div>
-          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-        `;
-        itemsContainer.appendChild(div);
-      });
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-price">₹${item.price.toFixed(2)}</div>
+      </div>
+      <div class="quantity-controls">
+        <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+        <span class="qty-display">${item.quantity}</span>
+        <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+      </div>
+      <div class="item-total">₹${itemTotal.toFixed(2)}</div>
+      <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+    `;
+    itemsContainer.appendChild(div);
+  });
 
-      subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-      subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
-      grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+  subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+  subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
+  grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
 
-      // Address check
-      const savedAddress = localStorage.getItem('savedAddress');
-      if (savedAddress) {
-        const addr = JSON.parse(savedAddress);
-        addressDisplay.innerHTML = `
-          ${addr.fullName}<br>
-          ${addr.addressLine}<br>
-          ${addr.city}, ${addr.state} - ${addr.pincode}<br>
-          Phone: ${addr.phone}<br>
-          Type: ${addr.addressType}<br>
-          <a href="address.html">Update Address</a>
-        `;
-        proceedBtn.disabled = false;
-      } else {
-        addressDisplay.innerHTML = 'No address added yet.<br><a href="address.html">Add Address →</a>';
-        proceedBtn.disabled = true;
-      }
-    }
+  // Address check & button enable/disable logic
+  const savedAddress = localStorage.getItem('savedAddress');
+  if (savedAddress) {
+    const addr = JSON.parse(savedAddress);
+    addressDisplay.innerHTML = `
+      <strong>Type:</strong> ${addr.addressType || 'Not specified'}<br>
+      ${addr.fullName}<br>
+      ${addr.addressLine}<br>
+      ${addr.city}, ${addr.state} - ${addr.pincode}<br>
+      Phone: ${addr.phone}<br>
+      <a href="address.html" style="color:#007bff; font-weight:bold;">Update Address</a>
+    `;
+    proceedBtn.disabled = false;
+    proceedBtn.textContent = 'Proceed to Payment →';
+  } else {
+    addressDisplay.innerHTML = 'No address added yet.<br><a href="address.html" style="color:#007bff; font-weight:bold;">Add Address →</a>';
+    proceedBtn.disabled = true;
+    proceedBtn.textContent = 'Add Address First';
+  }
+}
 
     // Change quantity
     function changeQuantity(index, change) {
@@ -380,6 +345,10 @@
     document.getElementById('proceed-payment-btn').addEventListener('click', () => {
       if (getCart().length === 0) {
         showToast('Your cart is empty!', 'error');
+        return;
+      }
+      if (!localStorage.getItem('savedAddress')) {
+        showToast('Please add delivery address first!', 'error');
         return;
       }
       window.location.href = 'payment.html';

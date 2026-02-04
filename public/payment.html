@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MyShop - Payment</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
     .payment-container {
@@ -107,6 +108,33 @@
       background: #5a6268;
     }
 
+    .place-order-btn {
+      width: 100%;
+      padding: 1.3rem;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0,123,255,0.3);
+    }
+
+    .place-order-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,123,255,0.5);
+    }
+
+    .place-order-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.8;
+    }
+
     #payment-message {
       margin-top: 1.5rem;
       padding: 1rem;
@@ -140,26 +168,12 @@
         <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
         <span id="user-status">Guest</span>
         <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" style="
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 5px 7px;
-    background: linear-gradient(135deg, #66d4ea, #764ba2);
-    color: white;
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: bold;
-    border-radius: 50px;
-    box-shadow: 0 6px 20px rgba(102,118,234,0.4);
-    transition: all 0.3s ease;
-  " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
-     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'" id="login-link">Login / Register</a>
+        <a href="login.html" id="login-link">Login / Register</a>
       </div>
     </nav>
   </header>
 
-  <!-- Checkout → Payment -->
+  <!-- Payment Page -->
   <main class="payment-container">
 
     <!-- Payment Options -->
@@ -167,19 +181,21 @@
       <h2>Select Payment Method</h2>
 
       <div class="option" data-method="upi">
-        <label>
-          <input type="radio" name="payment-method" value="upi">
-          UPI (Google Pay, PhonePe, Paytm)
-        </label>
-        <div class="payment-form" id="upi-form">
-          <div class="upi-qr">
-            <img src="./images/photo.jpeg" alt="UPI QR Code">
-            <p style="margin-top:1rem;">UPI ID: <strong>9591191788@fam</strong></p>
-            <p>Scan & Pay any amount</p>
-          </div>
-          <button class="pay-btn" onclick="simulatePayment('UPI')">Pay Now</button>
-        </div>
-      </div>
+  <label>
+    <input type="radio" name="payment-method" value="upi">
+    UPI (Google Pay, PhonePe, Paytm)
+  </label>
+  <div class="payment-form" id="upi-form">
+    <div class="upi-qr">
+      <img src="./images/photo.jpeg" alt="UPI QR Code">
+      <p style="margin-top:1rem;">UPI ID: <strong>9591191788@fam</strong></p>
+      <p>Scan & Pay the total amount</p>
+    </div>
+    <input type="text" id="upi-transaction-id" placeholder="Enter Transaction ID" required>
+    <!-- Changed onclick here -->
+    <button type="button" class="pay-btn" onclick="validateAndEnableOrder('upi')">Confirm UPI Details</button>
+  </div>
+</div>
 
       <div class="option" data-method="card">
         <label>
@@ -187,10 +203,10 @@
           Credit / Debit Card
         </label>
         <div class="payment-form" id="card-form">
-          <input type="text" placeholder="Card Number" maxlength="16">
-          <input type="text" placeholder="MM / YY" maxlength="5">
-          <input type="text" placeholder="CVV" maxlength="3">
-          <button class="pay-btn" onclick="simulatePayment('Card')">Pay Now</button>
+          <input type="text" id="card-number" placeholder="Card Number" maxlength="16" required>
+          <input type="text" id="card-expiry" placeholder="MM / YY" maxlength="5" required>
+          <input type="text" id="card-cvv" placeholder="CVV" maxlength="3" required>
+          <button type="button" class="pay-btn" onclick="validateAndEnableOrder('card')">Pay with Card</button>
         </div>
       </div>
 
@@ -200,38 +216,17 @@
           Net Banking
         </label>
         <div class="payment-form" id="netbanking-form">
-          <select>
-            <option>Select Bank</option>
-            <option>HDFC Bank</option>
-            <option>ICICI Bank</option>
-            <option>SBI</option>
-            <option>Axis Bank</option>
+          <select id="bank-select" required>
+            <option value="">Select Bank</option>
+            <option value="HDFC">HDFC Bank</option>
+            <option value="ICICI">ICICI Bank</option>
+            <option value="SBI">State Bank of India</option>
+            <option value="Axis">Axis Bank</option>
           </select>
-          <button class="pay-btn" onclick="simulatePayment('Net Banking')">Pay Now</button>
+          <button type="button" class="pay-btn" onclick="validateAndEnableOrder('netbanking')">Pay with Net Banking</button>
         </div>
       </div>
 
-      <div class="option" data-method="wallet">
-        <label>
-          <input type="radio" name="payment-method" value="wallet">
-          Wallet (Paytm / Amazon Pay)
-        </label>
-        <div class="payment-form" id="wallet-form">
-          <input type="text" placeholder="Wallet Mobile Number">
-          <button class="pay-btn" onclick="simulatePayment('Wallet')">Pay Now</button>
-        </div>
-      </div>
-
-      <div class="option" data-method="cod">
-        <label>
-          <input type="radio" name="payment-method" value="cod">
-          Cash on Delivery
-        </label>
-        <div class="payment-form" id="cod-form">
-          <p style="color:#555;">₹50 extra charge for COD</p>
-          <button class="pay-btn" onclick="simulatePayment('Cash on Delivery')">Confirm Order</button>
-        </div>
-      </div>
     </div>
 
     <!-- Order Summary -->
@@ -241,9 +236,13 @@
       <div class="total">
         Total Amount: <span id="grand-total">₹0.00</span>
       </div>
-      <div style="margin-top: 2rem; text-align: right;">
-  <a href="checkout.html" class="proceed-btn">Proceed to Checkout</a>
-</div>
+
+      <!-- Place Order Button -->
+      <button class="place-order-btn" id="place-order-btn" disabled>Place Order & Pay</button>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="checkout.html" class="proceed-btn">Back to Checkout</a>
+      </div>
 
       <a href="cart.html" class="back-btn">← Back to Cart</a>
     </div>
@@ -263,59 +262,177 @@
   <script src="js/cart.js"></script>
 
   <script>
-    // Toggle payment forms
+  // Load cart & calculate total
+  function updateOrderSummary() {
+    const cart = getCart() || [];
+    const container = document.getElementById('cart-items');
+    const totalEl = document.getElementById('grand-total');
+    const placeBtn = document.getElementById('place-order-btn');
+
+    container.innerHTML = '';
+    let total = 0;
+
+    if (cart.length === 0) {
+      container.innerHTML = '<p style="text-align:center; color:#666;">Your cart is empty.</p>';
+      totalEl.textContent = '₹0.00';
+      placeBtn.disabled = true;
+      return;
+    }
+
+    cart.forEach(item => {
+      total += item.price * item.quantity;
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <strong>${item.name}</strong> × ${item.quantity}<br>
+        ₹${(item.price * item.quantity).toFixed(2)}
+      `;
+      container.appendChild(div);
+    });
+
+    totalEl.textContent = `₹${total.toFixed(2)}`;
+
+    // Keep Place Order disabled until method is validated
+    placeBtn.disabled = true;
+  }
+
+  // Validate payment details & enable Place Order
+  function validateAndEnableOrder(method) {
+  let valid = true;
+
+  if (method === 'upi') {
+    const txnId = document.getElementById('upi-transaction-id').value.trim();
+    if (!txnId) {
+      showToast('Please enter UPI Transaction ID', 'error');
+      valid = false;
+    }
+  } else if (method === 'card') {
+    const cardNum = document.getElementById('card-number').value.trim();
+    const expiry = document.getElementById('card-expiry').value.trim();
+    const cvv = document.getElementById('card-cvv').value.trim();
+    if (!cardNum || !expiry || !cvv) {
+      showToast('Please fill all card details', 'error');
+      valid = false;
+    }
+  } else if (method === 'netbanking') {
+    const bank = document.getElementById('bank-select').value;
+    if (!bank) {
+      showToast('Please select a bank', 'error');
+      valid = false;
+    }
+  }
+
+  if (valid) {
+    document.getElementById('place-order-btn').disabled = false;
+    showToast(`${method.toUpperCase()} details validated. Click Place Order to confirm.`, 'success');
+  }
+}
+
+  // Place Order – send to backend
+// Place Order – send to backend
+document.getElementById('place-order-btn').addEventListener('click', () => {
+  console.log('Place Order clicked!');
+
+  const cart = getCart();
+  if (cart.length === 0) {
+    showToast('Your cart is empty!', 'error');
+    return;
+  }
+
+  const savedAddress = localStorage.getItem('savedAddress');
+  if (!savedAddress) {
+    showToast('No delivery address saved!', 'error');
+    return;
+  }
+
+  const address = JSON.parse(savedAddress);
+  const selectedMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
+
+  if (!selectedMethod) {
+    showToast('Please select a payment method', 'error');
+    return;
+  }
+
+  // Collect payment details from the active form (this was missing)
+  let paymentDetails = { method: selectedMethod };
+
+  if (selectedMethod === 'card') {
+    paymentDetails.cardNumber = document.getElementById('card-number')?.value.trim() || '';
+    paymentDetails.cardExpiry = document.getElementById('card-expiry')?.value.trim() || '';
+    paymentDetails.cardCvv = document.getElementById('card-cvv')?.value.trim() || '';
+  } else if (selectedMethod === 'upi') {
+    paymentDetails.upiTransactionId = document.getElementById('upi-transaction-id')?.value.trim() || '';
+  } else if (selectedMethod === 'netbanking') {
+    paymentDetails.bankName = document.getElementById('bank-select')?.value || '';
+  }
+
+  const order = {
+    userId: localStorage.getItem('userId') || null,
+    items: cart.map(item => ({
+      productId: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image
+    })),
+    total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    address,
+    payment: paymentDetails,
+    status: 'Completed'
+  };
+
+  console.log('Sending order to backend:', order); // ← debug: see what is sent
+
+  fetch('https://my-shop-one-rho.vercel.app/api/order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(order)
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then(data => {
+    showToast('Order placed successfully!', 'success');
+    localStorage.removeItem('cart');
+    localStorage.removeItem('savedAddress');
+    updateCartCount();
+    setTimeout(() => window.location.href = 'index.html', 2000);
+  })
+  .catch(err => {
+    showToast('Failed to place order: ' + err.message, 'error');
+    console.error('Order error:', err);
+  });
+});
+
+  // Toggle payment forms
+  function togglePaymentForm() {
+    document.querySelectorAll('.payment-form').forEach(form => form.classList.remove('active'));
+    const selected = document.querySelector('input[name="payment-method"]:checked');
+    if (selected) {
+      const formId = selected.value + '-form';
+      const form = document.getElementById(formId);
+      if (form) form.classList.add('active');
+    }
+  }
+
+  // Init on load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateOrderSummary();
+
+    // Toggle form when radio changes
     document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        document.querySelectorAll('.payment-form').forEach(form => form.classList.remove('active'));
-        const formId = this.value + '-form';
-        document.getElementById(formId)?.classList.add('active');
-      });
+      radio.addEventListener('change', togglePaymentForm);
     });
 
-    // Load cart & calculate total
-    function updateCheckoutSummary() {
-      const cart = getCart() || [];
-      const container = document.getElementById('cart-items');
-      const totalEl = document.getElementById('grand-total');
-
-      container.innerHTML = '';
-      let total = 0;
-
-      if (cart.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666;">Your cart is empty.</p>';
-        totalEl.textContent = '₹0.00';
-        return;
-      }
-
-      cart.forEach(item => {
-        total += item.price * item.quantity;
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <strong>${item.name}</strong> × ${item.quantity}<br>
-          ₹${(item.price * item.quantity).toFixed(2)}
-        `;
-        container.appendChild(div);
-      });
-
-      totalEl.textContent = `₹${total.toFixed(2)}`;
+    // Show default form (UPI) on page load
+    const upiRadio = document.querySelector('input[value="upi"]');
+    if (upiRadio) {
+      upiRadio.checked = true;
+      togglePaymentForm();
     }
-
-    // Simulate payment success
-    function simulatePayment(method) {
-      showToast(`Payment processing via ${method}...`, 'success');
-      setTimeout(() => {
-        showToast('Payment successful! Order placed.', 'success');
-        clearCart();
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 2000);
-      }, 1500);
-    }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      updateCheckoutSummary();
-    });
-  </script>
+  });
+</script>
 </body>
 </html>

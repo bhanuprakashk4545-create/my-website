@@ -92,7 +92,7 @@
       background: #28a745;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 25px;
       font-size: 1.3rem;
       font-weight: bold;
       cursor: pointer;
@@ -103,6 +103,28 @@
 
     .proceed-btn:hover {
       background: #218838;
+    }
+    .proceed-btn1 {
+      
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      padding: 1.2rem;
+      background: #789805;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .proceed-btn1:hover {
+      background: #b1cc2c;
     }
 
     .empty-cart {
@@ -171,6 +193,7 @@
       <div style="font-size: 1.8rem; font-weight: bold; color: #28a745;">
         Grand Total: <span id="grand-total">₹0.00</span>
       </div>
+      <a href="products.html" class="proceed-btn1">Continue Shopping </a>
       <a href="checkout.html" class="proceed-btn">Proceed to Checkout</a>
     </div>
   </main>

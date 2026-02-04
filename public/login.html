@@ -114,14 +114,34 @@
       </form>
       <p>Don't have an account? <a href="register.html">Register here</a></p>
     </div>
+    <div id="message" style="display:none;"></div>
   </main>
 
   <!-- Scripts -->
   <script>
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('login-form');
+    const msgDiv = document.getElementById('message');
+
+    if (!form || !msgDiv) {
+      console.error('Login form or message div not found');
+      return;
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+
+      const email = document.getElementById('email')?.value.trim();
+      const password = document.getElementById('password')?.value.trim();
+
+      if (!email || !password) {
+        msgDiv.className = 'error';
+        msgDiv.textContent = 'Please fill email and password';
+        msgDiv.style.display = 'block';
+        return;
+      }
+
+      msgDiv.style.display = 'none';
 
       try {
         const res = await fetch('https://my-shop-one-rho.vercel.app/api/auth/login', {
@@ -130,34 +150,28 @@
           body: JSON.stringify({ email, password })
         });
 
-        const text = await res.text();
-        console.log('Raw response:', text); // Debug - check this in console
-
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          throw new Error('Invalid response from server');
-        }
+        const data = await res.json();
 
         if (res.ok) {
           localStorage.setItem('token', data.token);
-          alert('Login successful!');
-          window.location.href = 'index.html';
+          localStorage.setItem('userId', data.user._id);
+          msgDiv.className = 'success';
+          msgDiv.textContent = 'Login successful!';
+          msgDiv.style.display = 'block';
+          setTimeout(() => window.location.href = 'index.html', 1500);
         } else {
-          alert(data.message || 'Login failed');
+          msgDiv.className = 'error';
+          msgDiv.textContent = data.message || 'Login failed';
+          msgDiv.style.display = 'block';
         }
       } catch (err) {
+        msgDiv.className = 'error';
+        msgDiv.textContent = 'Network error: ' + err.message;
+        msgDiv.style.display = 'block';
         console.error('Login error:', err);
-        alert('Network/server error: ' + err.message);
       }
-      if (res.ok) {
-  showToast('Registration successful! Please login.');
-  localStorage.removeItem('cart'); // clear any old cart
-  localStorage.removeItem('savedAddress');
-  window.location.href = 'login.html';
-}
     });
-  </script>
+  });
+</script>
 </body>
 </html>

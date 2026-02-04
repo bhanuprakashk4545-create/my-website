@@ -133,19 +133,19 @@
   <script>
   // Load existing address for edit (if saved)
   document.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem('savedAddress');
-    if (saved) {
-      const addr = JSON.parse(saved);
-      document.getElementById('fullName').value = addr.fullName || '';
-      document.getElementById('phone').value = addr.phone || '';
-      document.getElementById('addressLine').value = addr.addressLine || '';
-      document.getElementById('landmark').value = addr.landmark || '';
-      document.getElementById('city').value = addr.city || '';
-      document.getElementById('state').value = addr.state || '';
-      document.getElementById('pincode').value = addr.pincode || '';
-      document.getElementById('addressType').value = addr.addressType || '';
-    }
-  });
+  const saved = localStorage.getItem('savedAddress');
+  if (saved) {
+    const addr = JSON.parse(saved);
+    document.getElementById('fullName').value = addr.fullName || '';
+    document.getElementById('phone').value = addr.phone || '';
+    document.getElementById('addressLine').value = addr.addressLine || '';
+    document.getElementById('landmark').value = addr.landmark || '';
+    document.getElementById('city').value = addr.city || '';
+    document.getElementById('state').value = addr.state || '';
+    document.getElementById('pincode').value = addr.pincode || '';
+    document.getElementById('addressType').value = addr.addressType || '';
+  }
+});
 
   document.getElementById('address-form').addEventListener('submit', async (e) => {
     e.preventDefault();

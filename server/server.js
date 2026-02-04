@@ -16,6 +16,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/address', require('./routes/address'));
+app.use('/api/order', require('./routes/order'));
 
 // Catch-all for frontend SPA – MUST be LAST
 app.get('*', (req, res) => {

@@ -22,18 +22,20 @@ function updateCartCount() {
 function addToCart(id, name, price, image) {
   let cart = getCart() || [];
 
-  const existing = cart.find(item => item.id === id);
-  if (existing) {
-    existing.quantity += 1;
+  const existingItem = cart.find(item => item.id === id);
+
+  if (existingItem) {
+    // Item already exists → increase quantity
+    existingItem.quantity += 1;
+    showToast(`Increased quantity of ${name} to ${existingItem.quantity}`, 'success');
   } else {
+    // New item → add with quantity 1
     cart.push({ id, name, price, image, quantity: 1 });
+    showToast(`Added ${name} to cart!`, 'success');
   }
 
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-
-  // Always show notification here — one place only
-  showToast(`Added ${name} to cart!`, 'success');
 }
 
 // Remove item from cart

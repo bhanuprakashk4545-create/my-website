@@ -485,3 +485,11 @@ footer {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.payment-form {
+  margin-top: 1.5rem;
+  display: none;
+}
+
+.payment-form.active {
+  display: block;
+}
