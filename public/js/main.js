@@ -22,6 +22,10 @@ function showToast(message, type = 'success') {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
     }, 3000);
+    if (type === 'warning') {
+  toast.style.background = '#f59e0b';
+  toast.style.color = 'white';
+}
 }
 
 function updateAuthUI() {

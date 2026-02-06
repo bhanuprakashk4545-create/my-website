@@ -337,7 +337,33 @@
     }
 
     // Init
-    document.addEventListener('DOMContentLoaded', updateCartPage);
+    
+document.addEventListener('DOMContentLoaded', () => {
+  const checkoutBtn = document.querySelector('.checkout-btn'); // or use id if you have one
+
+  if (checkoutBtn) {
+    const isLoggedIn = !!localStorage.getItem('token');
+
+    if (!isLoggedIn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.background = "#6b7280"; // gray out
+      checkoutBtn.style.cursor = "not-allowed";
+      checkoutBtn.textContent = "Login to Checkout";
+
+      checkoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast("Please login to proceed to checkout", "warning");
+
+        // Optional: save page for return after login
+        localStorage.setItem('redirectAfterLogin', window.location.href);
+
+        setTimeout(() => {
+          window.location.href = "register.html";
+        }, 1800);
+      });
+    }
+  }
+});
   </script>
 </body>
 </html>
