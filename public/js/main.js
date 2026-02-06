@@ -121,6 +121,24 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(card);
   });
 });
+// Hamburger menu toggle
+const hamburger = document.getElementById('hamburger-btn');
+const navMenu = document.getElementById('nav-menu');
+
+if (hamburger && navMenu) {
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+  });
+
+  // Close menu when clicking a link (optional)
+  navMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+    });
+  });
+}
 
 // Make functions available globally if needed in inline scripts
 window.showToast = showToast;

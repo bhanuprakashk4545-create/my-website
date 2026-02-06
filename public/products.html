@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .filters { background: #f8f9fa; padding: 1.5rem; text-align: center; border-bottom: 1px solid #ddd; }
+    .filters { background: #f4f5f7; padding: 1.5rem; text-align: center; border-bottom: 1px solid #ddd; background-color: rgb(223, 193, 152); border-radius: 20px;}
     .search-bar { margin-bottom: 1rem; }
     #search-input { width: 100%; max-width: 500px; padding: 0.8rem; font-size: 1.1rem; border-radius: 6px; border: 1px solid #ccc; }
     .category-filters { margin: 1rem 0; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
-    .filter-btn { padding: 0.6rem 1.2rem; background: #e9ecef; border: none; border-radius: 30px; cursor: pointer; }
-    .filter-btn.active, .filter-btn:hover { background: #007bff; color: white; }
+    .filter-btn { padding: 0.6rem 1.2rem; background: #9dcbf8; border: none; border-radius: 30px; cursor: pointer; }
+    .filter-btn.active, .filter-btn:hover { background: #65cce9; color: white; }
     .sort-options { margin: 1rem 0; }
     #sort-select { padding: 0.6rem 1rem; font-size: 1rem; border-radius: 6px; }
     .products-section { padding: 2rem; }
@@ -31,11 +31,10 @@
   <!-- Navbar (same as your home page) -->
   <header>
     <nav class="navbar">
-      <div class="logo">MyShop</div>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
+      <div class="logo"><a href="index.html" style="color: #f8fafc; text-decoration: none;">My Shop</a></div>      <ul class="nav-links">
+
         <li><a href="products.html">Products</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="contact.html">Support</a></li>
       </ul>
       <div class="nav-right">
         <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
@@ -65,11 +64,11 @@
   <!-- Filters + Search + Sort -->
   <section class="filters">
     <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Search products..." />
+      <input type="text" id="search-input" placeholder="🔎Search products..." />
     </div>
 
     <div class="sort-options">
-      <label for="sort-select">Sort by: </label>
+      <label for="sort-select"><b>Sort by:</b></bSort> </label>
       <select id="sort-select">
         <option value="default">Default</option>
         <option value="price-asc">Price: Low to High</option>
@@ -80,12 +79,18 @@
     </div>
 
     <div class="category-filters">
-      <button class="filter-btn active" data-category="all">All</button>
-      <button class="filter-btn" data-category="electronics">Electronics</button>
-      <button class="filter-btn" data-category="clothing">Clothing</button>
-      <button class="filter-btn" data-category="accessories">Accessories</button>
-      <button class="filter-btn" data-category="home">Home & Kitchen</button>
-      <button class="filter-btn" data-category="fitness">Fitness</button>
+      <button class="filter-btn active" data-category="all">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC39_Iort95VKpjfkA0ghNznDBoBFxqw7upg&s" alt="All" width="50" height="50"><p>All</p>  </button>
+      <div class="filter-btn" data-category="electronics">
+        <img src="https://m.media-amazon.com/images/I/314bul4sPML._AC_SR290,290_.jpg" alt="Electronics" width="60" height="50"><p>Electronics</p> </div>
+      <div class="filter-btn" data-category="clothing">
+        <img src="https://woscher.com/cdn/shop/products/350Gms-01_40d4a1e9-333c-4ed2-91df-9da833775540_1080x.jpg?v=1665136476" alt="Clothing" width="60" height="50"><p>Clothing</p> </div>
+      <div class="filter-btn" data-category="accessories">
+        <img src="https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=800" alt="Accessories" width="60" height="50"><p>Accessories</p> </div>
+      <div class="filter-btn" data-category="home">
+        <img src="https://rukminim2.flixcart.com/image/480/640/xif0q/cookware-set/s/k/j/-original-imah8rf6bpuzvqrj.jpeg?q=90" alt="Home & Kitchen" width="80" height="50"><p>Home & Kitchen</p>  </div>
+      <div class="filter-btn" data-category="fitness">
+        <img src="https://rukminim2.flixcart.com/image/480/640/xif0q/dumbbell/g/t/z/20kg-2kg-x-4-3kg-x-4-dumbbell-combo-set-20-amanfit-original-imahdny8ce7emmjn.jpeg?q=90" alt="Fitness" width="60" height="50"><p>Fitness</p> </div>
     </div>
   </section>
 

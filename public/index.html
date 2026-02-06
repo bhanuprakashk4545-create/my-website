@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  <title>MyShop - Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <title>MyShop - Home</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -211,42 +211,63 @@
       position: relative;
       z-index: 2;
     }
+    /* Desktop navbar */
+
   </style>
 </head>
 <body>
 
   <!-- Navbar (unchanged) -->
   <header>
+    
     <nav class="navbar">
-      <div class="logo">MyShop</div>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-      <div class="nav-right">
-        <a href="cart.html" class="cart-link">Cart <span id="cart-count">0</span></a>
-        <span id="user-status">Guest</span>
-        <button id="logout-btn" style="display:none;">Logout</button>
-        <a href="login.html" style="
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 5px ;
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  border: none;
-  border-radius: 9999px;
-  box-shadow: 0 8px 24px rgba(167,139,250,0.35);
-  transition: all 0.3s ease;
-  cursor: pointer;
-" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(167,139,250,0.6)'"
-   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(167,139,250,0.35)'" id="login-link">Login / Register</a>
-      </div>
-    </nav>
+  <div class="logo">
+    <a href="index.html" style="color: #f8fafc; text-decoration: none;">My Shop</a>
+  </div>
+
+  <!-- Hamburger icon (only visible on mobile) -->
+  <button class="hamburger" id="hamburger-btn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <ul class="nav-links" id="nav-menu">
+    <li><a href="products.html">Products</a></li>
+    <li><a href="contact.html">Support</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="cart.html" class="cart-link">
+      Cart <span id="cart-count">0</span>
+    </a>
+    <span id="user-status">Guest</span>
+    <button id="logout-btn" style="display:none;">Logout</button>
+    
+    <a href="login.html" 
+       style="
+         display: inline-flex;
+         align-items: center;
+         gap: 0.8rem;
+         padding: 8px 16px;
+         background: linear-gradient(135deg, #a78bfa, #7c3aed);
+         color: white;
+         font-size: 18px;
+         font-weight: bold;
+         text-decoration: none;
+         border: none;
+         border-radius: 9999px;
+         box-shadow: 0 8px 24px rgba(167,139,250,0.35);
+         transition: all 0.3s ease;
+         cursor: pointer;
+       "
+       onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(167,139,250,0.6)'"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(167,139,250,0.35)'"
+       id="login-link">
+      Login / Register
+    </a>
+  </div>
+</nav>
   </header>
 
   <!-- Hero with Product Carousel (unchanged) -->
@@ -262,7 +283,7 @@
           </div>
         </div>
 
-        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1606293459212-8cf8e3f8e8d0?w=1400');">
+        <div class="carousel-slide" style="background-image: url('https://cdn.thewirecutter.com/wp-content/media/2023/08/powerbanks-2048px-1508-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp');">
           <div class="carousel-content">
             <div class="big-sale-badge">FLASH DEAL</div>
             <h2>Power Banks & Chargers</h2>
@@ -271,7 +292,7 @@
           </div>
         </div>
 
-        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1400');">
+        <div class="carousel-slide" style="background-image: url('https://thumbs.dreamstime.com/b/blue-portable-speaker-white-wireless-earbuds-light-surface-compact-mesh-grille-strap-next-to-open-case-purple-371732881.jpg');">
           <div class="carousel-content">
             <div class="big-sale-badge">LIMITED STOCK</div>
             <h2>Wireless Earbuds & Speakers</h2>
@@ -291,9 +312,7 @@
 
   <!-- Featured Products -->
   <section class="featured">
-    <center>
-      <h1>Featured Products</h1>
-    </center>
+      <h1>Top Deals</h1>
     <div id="featured-products" class="products-grid"></div>
   </section>
 
@@ -302,7 +321,7 @@
     <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 2rem;">
       
       <!-- Banner 1: Seasonal Offers -->
-      <div class="offer-banner" style="background-image: url('data:image/jpeg;base64,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'); height: 240px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div class="offer-banner" style="background-image: url('https://t3.ftcdn.net/jpg/03/98/03/86/360_F_398038658_ItitaoBVgbciUH23OR4KLZ9nqxW23NYB.jpg'); height: 240px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; display: flex; align-items: center; justify-content: center; text-align: center;">
         <div style="position: relative; z-index: 2; padding: 2rem;">
           <h3 style="font-size: 2.4rem; margin-bottom: 0.8rem; font-weight: 800; color: white;">SEASONAL OFFERS</h3>
           <p style="font-size: 1.4rem; margin-bottom: 1.5rem; color: white;">Up to <strong style="font-size: 2rem;">70% OFF</strong> this week!</p>
@@ -311,7 +330,7 @@
       </div>
 
       <!-- Banner 2: Fast Delivery -->
-      <div class="offer-banner" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200'); height: 240px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div class="offer-banner" style="background-image: url('https://png.pngtree.com/png-vector/20230507/ourmid/pngtree-fast-delivery-label-design-vector-png-image_7087605.png'); height: 240px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; display: flex; align-items: center; justify-content: center; text-align: center;">
         <div style="position: relative; z-index: 2; padding: 2rem;">
           <h3 style="font-size: 2.4rem; margin-bottom: 0.8rem; font-weight: 800; color: white;">FAST DELIVERY</h3>
           <p style="font-size: 1.4rem; margin-bottom: 1.5rem; color: white;">Free Shipping in Bengaluru <br><strong>Within 24 Hours</strong></p>
