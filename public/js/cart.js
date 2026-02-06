@@ -176,12 +176,16 @@ function getCart() {
   return JSON.parse(localStorage.getItem('cart') || '[]');
 }
 
+function saveCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 function updateCartCount() {
   const cart = getCart();
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cart-count').textContent = count;
 }
-function clearCart() {
-  localStorage.removeItem('cart');
-  updateCartCount();
+
+function showToast(message, type = 'success') {
+  // your showToast function here (from earlier messages)
 }

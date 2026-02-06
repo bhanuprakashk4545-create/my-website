@@ -256,113 +256,153 @@
   <script src="js/cart.js"></script>
 
   <script>
-    function updateCartPage() {
-      const cart = getCart() || [];
-      const itemsContainer = document.getElementById('cart-items');
-      const emptyMsg = document.getElementById('empty-cart-msg');
-      const summary = document.getElementById('cart-summary');
-      const totalEl = document.getElementById('cart-total');
+  // Helper functions (make sure these are global or loaded early)
+  function getCart() {
+    return JSON.parse(localStorage.getItem('cart') || '[]');
+  }
 
-      itemsContainer.innerHTML = '';
-      let total = 0;
+  function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
 
-      if (cart.length === 0) {
-        emptyMsg.style.display = 'block';
-        summary.style.display = 'none';
-        return;
-      }
+  function updateCartCount() {
+    const cart = getCart();
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = count;
+  }
 
-      emptyMsg.style.display = 'none';
-      summary.style.display = 'block';
+  // Main cart page update function
+  function updateCartPage() {
+    const cart = getCart();
+    const itemsContainer = document.getElementById('cart-items');
+    const emptyMsg = document.getElementById('empty-cart-msg');
+    const summary = document.getElementById('cart-summary');
+    const totalEl = document.getElementById('cart-total');
 
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+    if (!itemsContainer) return;
 
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-          <div class="item-info">
-            <div class="item-name">${item.name}</div>
-            <div class="item-price">₹${item.price.toFixed(2)}</div>
-          </div>
-          <div class="quantity-controls">
-            <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
-            <span class="qty-display">${item.quantity}</span>
-            <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
-          </div>
-          <div class="item-total">₹${itemTotal.toFixed(2)}</div>
-          <button class="remove-btn" onclick="removeItem(${index})" style="
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #f87171, #ef4444);
-  color: white;
-  font-size: 1.15rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(248,113,113,0.4);
-  transition: all 0.3s ease;
-  cursor: pointer;
-" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
-   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'">Remove</button>
-        `;
-        itemsContainer.appendChild(div);
+    itemsContainer.innerHTML = '';
+    let total = 0;
+
+    if (cart.length === 0) {
+      emptyMsg.style.display = 'block';
+      summary.style.display = 'none';
+      return;
+    }
+
+    emptyMsg.style.display = 'none';
+    summary.style.display = 'block';
+
+    cart.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">₹${item.price.toFixed(2)}</div>
+        </div>
+        <div class="quantity-controls">
+          <button class="qty-btn" data-index="${index}" data-change="-1">-</button>
+          <span class="qty-display">${item.quantity}</span>
+          <button class="qty-btn" data-index="${index}" data-change="1">+</button>
+        </div>
+        <div class="item-total">₹${itemTotal.toFixed(2)}</div>
+        <button class="remove-btn" data-index="${index}" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 0.8rem;
+          padding: 10px 20px;
+          background: linear-gradient(135deg, #f87171, #ef4444);
+          color: white;
+          font-size: 1.15rem;
+          font-weight: 600;
+          border: none;
+          border-radius: 9999px;
+          box-shadow: 0 4px 16px rgba(248,113,113,0.4);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'">
+          Remove
+        </button>
+      `;
+      itemsContainer.appendChild(div);
+    });
+
+    totalEl.textContent = `₹${total.toFixed(2)}`;
+
+    // Re-attach event listeners after DOM update
+    attachCartListeners();
+  }
+
+  // Attach click events to quantity and remove buttons
+  function attachCartListeners() {
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        const change = parseInt(btn.dataset.change);
+        changeQuantity(index, change);
       });
+    });
 
-      totalEl.textContent = `₹${total.toFixed(2)}`;
-    }
-
-    // Change quantity
-    function changeQuantity(index, change) {
-      const cart = getCart();
-      cart[index].quantity += change;
-      if (cart[index].quantity < 1) cart[index].quantity = 1;
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartPage();
-      updateCartCount();
-    }
-
-    // Remove item
-    function removeItem(index) {
-      let cart = getCart();
-      cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartPage();
-      updateCartCount();
-      showToast('Item removed from cart');
-    }
-
-    // Init
-    // Block guest checkout with toast + guaranteed redirect
-document.addEventListener('DOMContentLoaded', () => {
-  const checkoutBtn = document.querySelector('.checkout-btn'); // change selector if needed (or use id)
-
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', (e) => {
-      const isLoggedIn = !!localStorage.getItem('token'); // or 'userId'
-
-      if (!isLoggedIn) {
-        e.preventDefault(); // stop any default behavior
-
-        // Show toast (using your existing showToast function)
-        showToast("Please login to proceed to checkout", "warning");
-
-        // Save current page so we can return after login
-        localStorage.setItem('redirectAfterLogin', window.location.href);
-
-        // Redirect to login after toast is visible (1.8 seconds)
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1800);
-      }
-      // If logged in → normal redirect to checkout.html (your existing code)
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        removeItem(index);
+      });
     });
   }
-});
-  </script>
+
+  // Change quantity
+  function changeQuantity(index, change) {
+    const cart = getCart();
+    cart[index].quantity += change;
+    if (cart[index].quantity < 1) cart[index].quantity = 1;
+    saveCart(cart);
+    updateCartPage();      // refresh UI
+    updateCartCount();     // update navbar count
+  }
+
+  // Remove item
+  function removeItem(index) {
+    let cart = getCart();
+    cart.splice(index, 1);
+    saveCart(cart);
+    updateCartPage();
+    updateCartCount();
+    showToast('Item removed from cart', 'info');
+  }
+
+  // Block guest checkout with toast + redirect
+  document.addEventListener('DOMContentLoaded', () => {
+    updateCartPage(); // initial load
+    attachCartListeners();
+
+    const checkoutBtn = document.querySelector('.checkout-btn'); // or id="checkout-btn"
+
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', (e) => {
+        const isLoggedIn = !!localStorage.getItem('token');
+
+        if (!isLoggedIn) {
+          e.preventDefault();
+
+          showToast("Please login to proceed to checkout", "warning");
+
+          localStorage.setItem('redirectAfterLogin', window.location.href);
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1800);
+        }
+        // Logged-in users proceed normally
+      });
+    }
+  });
+</script>
 </body>
 </html>
