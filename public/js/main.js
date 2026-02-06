@@ -1,50 +1,57 @@
 // public/js/main.js
 // Shared global logic for all pages (auth, toast, cart count, logout)
 
+// js/main.js - global helpers
+
 function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) {
-        console.warn('Toast container missing');
-        return;
-    }
+  const container = document.getElementById('toast-container');
+  if (!container) {
+    console.warn('Toast container missing');
+    return;
+  }
 
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
 
-    // Apply type-specific styles
-    switch (type) {
-        case 'success':
-            toast.style.background = '#10b981'; // green
-            toast.style.color = 'white';
-            break;
-        case 'error':
-            toast.style.background = '#ef4444'; // red
-            toast.style.color = 'white';
-            break;
-        case 'warning':
-            toast.style.background = '#f59e0b'; // amber/orange
-            toast.style.color = 'white';
-            break;
-        case 'info':
-            toast.style.background = '#3b82f6'; // blue
-            toast.style.color = 'white';
-            break;
-        default:
-            toast.style.background = '#6b7280'; // gray fallback
-            toast.style.color = 'white';
-    }
+  // Type-specific colors
+  switch (type) {
+    case 'success':
+      toast.style.background = '#10b981';
+      break;
+    case 'error':
+      toast.style.background = '#ef4444';
+      break;
+    case 'warning':
+      toast.style.background = '#f59e0b';
+      break;
+    default:
+      toast.style.background = '#3b82f6';
+  }
 
-    container.appendChild(toast);
+  toast.style.color = 'white';
+  toast.style.padding = '14px 20px';
+  toast.style.borderRadius = '8px';
+  toast.style.marginBottom = '10px';
+  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.25)';
+  toast.style.opacity = '0';
+  toast.style.transform = 'translateX(120%)';
+  toast.style.transition = 'all 0.4s ease';
 
-    // Show animation
-    setTimeout(() => toast.classList.add('show'), 100);
+  container.appendChild(toast);
 
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
+  // Show
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(0)';
+  }, 100);
+
+  // Hide & remove
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(120%)';
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 function updateAuthUI() {
