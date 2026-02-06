@@ -337,31 +337,30 @@
     }
 
     // Init
-    
+    // Block guest checkout with toast + guaranteed redirect
 document.addEventListener('DOMContentLoaded', () => {
-  const checkoutBtn = document.querySelector('.checkout-btn'); // or use id if you have one
+  const checkoutBtn = document.querySelector('.checkout-btn'); // change selector if needed (or use id)
 
   if (checkoutBtn) {
-    const isLoggedIn = !!localStorage.getItem('token');
+    checkoutBtn.addEventListener('click', (e) => {
+      const isLoggedIn = !!localStorage.getItem('token'); // or 'userId'
 
-    if (!isLoggedIn) {
-      checkoutBtn.disabled = true;
-      checkoutBtn.style.background = "#6b7280"; // gray out
-      checkoutBtn.style.cursor = "not-allowed";
-      checkoutBtn.textContent = "Login to Checkout";
+      if (!isLoggedIn) {
+        e.preventDefault(); // stop any default behavior
 
-      checkoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+        // Show toast (using your existing showToast function)
         showToast("Please login to proceed to checkout", "warning");
 
-        // Optional: save page for return after login
+        // Save current page so we can return after login
         localStorage.setItem('redirectAfterLogin', window.location.href);
 
+        // Redirect to login after toast is visible (1.8 seconds)
         setTimeout(() => {
-          window.location.href = "register.html";
+          window.location.href = "login.html";
         }, 1800);
-      });
-    }
+      }
+      // If logged in → normal redirect to checkout.html (your existing code)
+    });
   }
 });
   </script>

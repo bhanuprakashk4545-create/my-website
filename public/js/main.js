@@ -12,6 +12,29 @@ function showToast(message, type = 'success') {
     toast.className = `toast ${type}`;
     toast.textContent = message;
 
+    // Apply type-specific styles
+    switch (type) {
+        case 'success':
+            toast.style.background = '#10b981'; // green
+            toast.style.color = 'white';
+            break;
+        case 'error':
+            toast.style.background = '#ef4444'; // red
+            toast.style.color = 'white';
+            break;
+        case 'warning':
+            toast.style.background = '#f59e0b'; // amber/orange
+            toast.style.color = 'white';
+            break;
+        case 'info':
+            toast.style.background = '#3b82f6'; // blue
+            toast.style.color = 'white';
+            break;
+        default:
+            toast.style.background = '#6b7280'; // gray fallback
+            toast.style.color = 'white';
+    }
+
     container.appendChild(toast);
 
     // Show animation
@@ -22,10 +45,6 @@ function showToast(message, type = 'success') {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
     }, 3000);
-    if (type === 'warning') {
-  toast.style.background = '#f59e0b';
-  toast.style.color = 'white';
-}
 }
 
 function updateAuthUI() {
