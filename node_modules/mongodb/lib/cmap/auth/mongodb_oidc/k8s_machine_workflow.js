@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.callback = void 0;
 const promises_1 = require("fs/promises");
+const process = require("process");
 /** The fallback file name */
 const FALLBACK_FILENAME = '/var/run/secrets/kubernetes.io/serviceaccount/token';
 /** The azure environment variable for the file name. */

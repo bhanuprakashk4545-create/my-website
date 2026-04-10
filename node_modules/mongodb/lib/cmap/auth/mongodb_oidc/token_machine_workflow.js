@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.callback = void 0;
 const fs = require("fs");
+const process = require("process");
 const error_1 = require("../../../error");
 /** Error for when the token is missing in the environment. */
 const TOKEN_MISSING_ERROR = 'OIDC_TOKEN_FILE must be set in the environment.';

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LimitedSizeDocument = void 0;
 exports.isDriverInfoEqual = isDriverInfoEqual;
 exports.makeClientMetadata = makeClientMetadata;
-exports.addContainerMetadata = addContainerMetadata;
 exports.getFAASEnv = getFAASEnv;
 const os = require("os");
 const process = require("process");
@@ -62,7 +61,7 @@ exports.LimitedSizeDocument = LimitedSizeDocument;
  * 3. Omit the `env` document entirely.
  * 4. Truncate `platform`. -- special we do not truncate this field
  */
-function makeClientMetadata(driverInfoList, { appName = '' }) {
+async function makeClientMetadata(driverInfoList, { appName = '' }) {
     const metadataDocument = new LimitedSizeDocument(512);
     // Add app name first, it must be sent
     if (appName.length > 0) {
@@ -99,8 +98,8 @@ function makeClientMetadata(driverInfoList, { appName = '' }) {
     }
     // Note: order matters, os.type is last so it will be removed last if we're at maxSize
     const osInfo = new Map()
-        .set('name', process.platform)
-        .set('architecture', process.arch)
+        .set('name', os.platform())
+        .set('architecture', os.arch())
         .set('version', os.release())
         .set('type', os.type());
     if (!metadataDocument.ifItFitsItSits('os', osInfo)) {
@@ -124,16 +123,16 @@ function makeClientMetadata(driverInfoList, { appName = '' }) {
             }
         }
     }
-    return metadataDocument.toObject();
+    return await addContainerMetadata(metadataDocument.toObject());
 }
 let dockerPromise;
 /** @internal */
 async function getContainerMetadata() {
-    const containerMetadata = {};
     dockerPromise ??= (0, utils_1.fileIsAccessible)('/.dockerenv');
     const isDocker = await dockerPromise;
     const { KUBERNETES_SERVICE_HOST = '' } = process.env;
     const isKubernetes = KUBERNETES_SERVICE_HOST.length > 0 ? true : false;
+    const containerMetadata = {};
     if (isDocker)
         containerMetadata.runtime = 'docker';
     if (isKubernetes)
@@ -150,7 +149,10 @@ async function addContainerMetadata(originalMetadata) {
     if (Object.keys(containerMetadata).length === 0)
         return originalMetadata;
     const extendedMetadata = new LimitedSizeDocument(512);
-    const extendedEnvMetadata = { ...originalMetadata?.env, container: containerMetadata };
+    const extendedEnvMetadata = {
+        ...originalMetadata?.env,
+        container: containerMetadata
+    };
     for (const [key, val] of Object.entries(originalMetadata)) {
         if (key !== 'env') {
             extendedMetadata.ifItFitsItSits(key, val);
@@ -226,14 +228,15 @@ function getFAASEnv() {
  * with a future change to these global objects.
  */
 function getRuntimeInfo() {
+    const endianness = bson_1.NumberUtils.isBigEndian ? 'BE' : 'LE';
     if ('Deno' in globalThis) {
         const version = typeof Deno?.version?.deno === 'string' ? Deno?.version?.deno : '0.0.0-unknown';
-        return `Deno v${version}, ${os.endianness()}`;
+        return `Deno v${version}, ${endianness}`;
     }
     if ('Bun' in globalThis) {
         const version = typeof Bun?.version === 'string' ? Bun?.version : '0.0.0-unknown';
-        return `Bun v${version}, ${os.endianness()}`;
+        return `Bun v${version}, ${endianness}`;
     }
-    return `Node.js ${process.version}, ${os.endianness()}`;
+    return `Node.js ${process.version}, ${endianness}`;
 }
 //# sourceMappingURL=client_metadata.js.map

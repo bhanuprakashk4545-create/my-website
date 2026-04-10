@@ -5,6 +5,7 @@ exports.resolveSRVRecord = resolveSRVRecord;
 exports.parseOptions = parseOptions;
 const dns = require("dns");
 const mongodb_connection_string_url_1 = require("mongodb-connection-string-url");
+const process = require("process");
 const url_1 = require("url");
 const mongo_credentials_1 = require("./cmap/auth/mongo_credentials");
 const providers_1 = require("./cmap/auth/providers");
@@ -308,8 +309,14 @@ function parseOptions(uri, mongoClient = undefined, options = {}) {
                 source: mongoOptions.dbName
             });
         }
-        if (isAws && mongoOptions.credentials.username && !mongoOptions.credentials.password) {
-            throw new error_1.MongoMissingCredentialsError(`When using ${mongoOptions.credentials.mechanism} password must be set when a username is specified`);
+        if (isAws) {
+            const { username, password } = mongoOptions.credentials;
+            if (username || password) {
+                throw new error_1.MongoAPIError('username and password cannot be provided when using MONGODB-AWS. Credentials must be provided in a manner that can be read by the AWS SDK.');
+            }
+            if (mongoOptions.credentials.mechanismProperties.AWS_SESSION_TOKEN) {
+                throw new error_1.MongoAPIError('AWS_SESSION_TOKEN cannot be provided when using MONGODB-AWS. Credentials must be provided in a manner that can be read by the AWS SDK.');
+            }
         }
         mongoOptions.credentials.validate();
         // Check if the only auth related option provided was authSource, if so we can remove credentials
@@ -1075,14 +1082,6 @@ exports.OPTIONS = {
     secureProtocol: { type: 'any' },
     index: { type: 'any' },
     // Legacy options from v3 era
-    useNewUrlParser: {
-        type: 'boolean',
-        deprecated: 'useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version'
-    },
-    useUnifiedTopology: {
-        type: 'boolean',
-        deprecated: 'useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version'
-    },
     __skipPingOnConnect: { type: 'boolean' }
 };
 exports.DEFAULT_OPTIONS = new CaseInsensitiveMap(Object.entries(exports.OPTIONS)

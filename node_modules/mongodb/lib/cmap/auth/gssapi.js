@@ -4,6 +4,7 @@ exports.GSSAPI = exports.GSSAPICanonicalizationValue = void 0;
 exports.performGSSAPICanonicalizeHostName = performGSSAPICanonicalizeHostName;
 exports.resolveCname = resolveCname;
 const dns = require("dns");
+const os = require("os");
 const deps_1 = require("../../deps");
 const error_1 = require("../../error");
 const utils_1 = require("../../utils");
@@ -63,7 +64,7 @@ async function makeKerberosClient(authContext) {
         Object.assign(initOptions, { user: username, password: password });
     }
     const spnHost = mechanismProperties.SERVICE_HOST ?? host;
-    let spn = `${serviceName}${process.platform === 'win32' ? '/' : '@'}${spnHost}`;
+    let spn = `${serviceName}${os.platform() === 'win32' ? '/' : '@'}${spnHost}`;
     if ('SERVICE_REALM' in mechanismProperties) {
         spn = `${spn}@${mechanismProperties.SERVICE_REALM}`;
     }

@@ -5,7 +5,6 @@ exports.compress = compress;
 exports.decompress = decompress;
 exports.compressCommand = compressCommand;
 exports.decompressResponse = decompressResponse;
-const util_1 = require("util");
 const zlib = require("zlib");
 const constants_1 = require("../../constants");
 const deps_1 = require("../../deps");
@@ -32,8 +31,24 @@ exports.uncompressibleCommands = new Set([
     'copydb'
 ]);
 const ZSTD_COMPRESSION_LEVEL = 3;
-const zlibInflate = (0, util_1.promisify)(zlib.inflate.bind(zlib));
-const zlibDeflate = (0, util_1.promisify)(zlib.deflate.bind(zlib));
+const zlibInflate = (buf) => {
+    return new Promise((resolve, reject) => {
+        zlib.inflate(buf, (error, result) => {
+            if (error)
+                return reject(error);
+            resolve(result);
+        });
+    });
+};
+const zlibDeflate = (buf, options) => {
+    return new Promise((resolve, reject) => {
+        zlib.deflate(buf, options, (error, result) => {
+            if (error)
+                return reject(error);
+            resolve(result);
+        });
+    });
+};
 let zstd;
 let Snappy = null;
 function loadSnappy() {

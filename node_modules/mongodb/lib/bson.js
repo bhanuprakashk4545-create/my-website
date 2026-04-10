@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toUTF8 = exports.getBigInt64LE = exports.getFloat64LE = exports.getInt32LE = exports.UUID = exports.Timestamp = exports.serialize = exports.ObjectId = exports.MinKey = exports.MaxKey = exports.Long = exports.Int32 = exports.EJSON = exports.Double = exports.deserialize = exports.Decimal128 = exports.DBRef = exports.Code = exports.calculateObjectSize = exports.BSONType = exports.BSONSymbol = exports.BSONRegExp = exports.BSONError = exports.BSON = exports.Binary = void 0;
+exports.toUTF8 = exports.getBigInt64LE = exports.getFloat64LE = exports.getInt32LE = exports.UUID = exports.Timestamp = exports.serialize = exports.ObjectId = exports.NumberUtils = exports.MinKey = exports.MaxKey = exports.Long = exports.Int32 = exports.EJSON = exports.Double = exports.deserialize = exports.Decimal128 = exports.DBRef = exports.Code = exports.calculateObjectSize = exports.BSONType = exports.BSONSymbol = exports.BSONRegExp = exports.BSONError = exports.BSON = exports.Binary = void 0;
 exports.parseToElementsToArray = parseToElementsToArray;
 exports.pluckBSONSerializeOptions = pluckBSONSerializeOptions;
 exports.resolveBSONOptions = resolveBSONOptions;
@@ -25,6 +25,7 @@ Object.defineProperty(exports, "Int32", { enumerable: true, get: function () { r
 Object.defineProperty(exports, "Long", { enumerable: true, get: function () { return bson_2.Long; } });
 Object.defineProperty(exports, "MaxKey", { enumerable: true, get: function () { return bson_2.MaxKey; } });
 Object.defineProperty(exports, "MinKey", { enumerable: true, get: function () { return bson_2.MinKey; } });
+Object.defineProperty(exports, "NumberUtils", { enumerable: true, get: function () { return bson_2.NumberUtils; } });
 Object.defineProperty(exports, "ObjectId", { enumerable: true, get: function () { return bson_2.ObjectId; } });
 Object.defineProperty(exports, "serialize", { enumerable: true, get: function () { return bson_2.serialize; } });
 Object.defineProperty(exports, "Timestamp", { enumerable: true, get: function () { return bson_2.Timestamp; } });

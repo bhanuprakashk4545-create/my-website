@@ -7,7 +7,6 @@ exports.normalizeHintField = normalizeHintField;
 exports.isObject = isObject;
 exports.mergeOptions = mergeOptions;
 exports.filterOptions = filterOptions;
-exports.applyRetryableWrites = applyRetryableWrites;
 exports.isPromiseLike = isPromiseLike;
 exports.decorateWithCollation = decorateWithCollation;
 exports.decorateWithReadConcern = decorateWithReadConcern;
@@ -19,7 +18,7 @@ exports.maxWireVersion = maxWireVersion;
 exports.arrayStrictEqual = arrayStrictEqual;
 exports.errorStrictEqual = errorStrictEqual;
 exports.makeStateMachine = makeStateMachine;
-exports.now = now;
+exports.processTimeMS = processTimeMS;
 exports.calculateDurationInMs = calculateDurationInMs;
 exports.hasAtomicOperators = hasAtomicOperators;
 exports.resolveTimeoutOptions = resolveTimeoutOptions;
@@ -39,7 +38,6 @@ exports.parseInteger = parseInteger;
 exports.parseUnsignedInteger = parseUnsignedInteger;
 exports.checkParentDomainMatch = checkParentDomainMatch;
 exports.get = get;
-exports.request = request;
 exports.isHostMatch = isHostMatch;
 exports.promiseWithResolvers = promiseWithResolvers;
 exports.squashError = squashError;
@@ -54,10 +52,8 @@ exports.abortable = abortable;
 const crypto = require("crypto");
 const fs_1 = require("fs");
 const http = require("http");
+const process = require("process");
 const timers_1 = require("timers");
-const url = require("url");
-const url_1 = require("url");
-const util_1 = require("util");
 const bson_1 = require("./bson");
 const constants_1 = require("./cmap/wire_protocol/constants");
 const constants_2 = require("./constants");
@@ -98,10 +94,25 @@ function isUint8Array(value) {
  */
 function hostMatchesWildcards(host, wildcards) {
     for (const wildcard of wildcards) {
-        if (host === wildcard ||
-            (wildcard.startsWith('*.') && host?.endsWith(wildcard.substring(2, wildcard.length))) ||
-            (wildcard.startsWith('*/') && host?.endsWith(wildcard.substring(2, wildcard.length)))) {
+        // Exact match always wins
+        if (host === wildcard) {
             return true;
+        }
+        // Wildcard match with leading *.
+        if (wildcard.startsWith('*.')) {
+            const suffix = wildcard.substring(2);
+            // Exact match or strict subdomain match
+            if (host === suffix || host.endsWith(`.${suffix}`)) {
+                return true;
+            }
+        }
+        // Wildcard match with leading */
+        if (wildcard.startsWith('*/')) {
+            const suffix = wildcard.substring(2);
+            // Exact match or strict subpath match
+            if (host === suffix || host.endsWith(`/${suffix}`)) {
+                return true;
+            }
         }
     }
     return false;
@@ -154,19 +165,6 @@ function filterOptions(options, names) {
     }
     // Filtered options
     return filterOptions;
-}
-/**
- * Applies retryWrites: true to a command if retryWrites is set on the command's database.
- * @internal
- *
- * @param target - The target command to which we will apply retryWrites.
- * @param db - The database from which we can inherit a retryWrites value.
- */
-function applyRetryableWrites(target, db) {
-    if (db && db.s.options?.retryWrites) {
-        target.retryWrites = true;
-    }
-    return target;
 }
 /**
  * Applies a write concern to a command based on well defined inheritance rules, optionally
@@ -381,17 +379,20 @@ function makeStateMachine(stateTable) {
         target.s.state = newState;
     };
 }
-/** @internal */
-function now() {
-    const hrtime = process.hrtime();
-    return Math.floor(hrtime[0] * 1000 + hrtime[1] / 1000000);
+/**
+ * This function returns the number of milliseconds since an arbitrary point in time.
+ * This function should only be used to measure time intervals.
+ * @internal
+ * */
+function processTimeMS() {
+    return Math.floor(performance.now());
 }
 /** @internal */
 function calculateDurationInMs(started) {
     if (typeof started !== 'number') {
         return -1;
     }
-    const elapsed = now() - started;
+    const elapsed = processTimeMS() - started;
     return elapsed < 0 ? 0 : elapsed;
 }
 /** @internal */
@@ -721,7 +722,7 @@ class HostAddress {
         const urlString = `iLoveJS://${escapedHost}`;
         let url;
         try {
-            url = new url_1.URL(urlString);
+            url = new URL(urlString);
         }
         catch (urlError) {
             const runtimeError = new error_1.MongoRuntimeError(`Unable to parse ${escapedHost} with URL`);
@@ -979,41 +980,6 @@ function get(url, options = {}) {
         }, 10000);
     });
 }
-async function request(uri, options = {}) {
-    return await new Promise((resolve, reject) => {
-        const requestOptions = {
-            method: 'GET',
-            timeout: 10000,
-            json: true,
-            ...url.parse(uri),
-            ...options
-        };
-        const req = http.request(requestOptions, res => {
-            res.setEncoding('utf8');
-            let data = '';
-            res.on('data', d => {
-                data += d;
-            });
-            res.once('end', () => {
-                if (options.json === false) {
-                    resolve(data);
-                    return;
-                }
-                try {
-                    const parsed = JSON.parse(data);
-                    resolve(parsed);
-                }
-                catch {
-                    // TODO(NODE-3483)
-                    reject(new error_1.MongoRuntimeError(`Invalid JSON response: "${data}"`));
-                }
-            });
-        });
-        req.once('timeout', () => req.destroy(new error_1.MongoNetworkTimeoutError(`Network request to ${uri} timed out after ${options.timeout} ms`)));
-        req.once('error', error => reject(error));
-        req.end();
-    });
-}
 /** @internal */
 exports.DOCUMENT_DB_CHECK = /(\.docdb\.amazonaws\.com$)|(\.docdb-elastic\.amazonaws\.com$)/;
 /** @internal */
@@ -1048,7 +1014,16 @@ function promiseWithResolvers() {
 function squashError(_error) {
     return;
 }
-exports.randomBytes = (0, util_1.promisify)(crypto.randomBytes);
+const randomBytes = (size) => {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(size, (error, buf) => {
+            if (error)
+                return reject(error);
+            resolve(buf);
+        });
+    });
+};
+exports.randomBytes = randomBytes;
 /**
  * Replicates the events.once helper.
  *

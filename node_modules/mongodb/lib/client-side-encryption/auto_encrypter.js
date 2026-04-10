@@ -10,7 +10,6 @@ const error_1 = require("../error");
 const mongo_client_1 = require("../mongo_client");
 const utils_1 = require("../utils");
 const client_encryption_1 = require("./client_encryption");
-const cryptoCallbacks = require("./crypto_callbacks");
 const errors_1 = require("./errors");
 const mongocryptd_manager_1 = require("./mongocryptd_manager");
 const providers_1 = require("./providers");
@@ -28,6 +27,7 @@ exports.AutoEncryptionLoggerLevel = Object.freeze({
  * **NOTE**: Not meant to be instantiated directly, this is for internal use only.
  */
 class AutoEncrypter {
+    static { _a = constants_1.kDecorateResult; }
     /** @internal */
     static getMongoCrypt() {
         const encryption = (0, deps_1.getMongoDBClientEncryption)();
@@ -107,8 +107,7 @@ class AutoEncrypter {
             throw new errors_1.MongoCryptInvalidArgumentError('Can only provide a custom AWS credential provider when the state machine is configured for automatic AWS credential fetching');
         }
         const mongoCryptOptions = {
-            enableMultipleCollinfo: true,
-            cryptoCallbacks
+            errorWrapper: errors_1.defaultErrorWrapper
         };
         if (options.schemaMap) {
             mongoCryptOptions.schemaMap = Buffer.isBuffer(options.schemaMap)
@@ -270,5 +269,4 @@ class AutoEncrypter {
     }
 }
 exports.AutoEncrypter = AutoEncrypter;
-_a = constants_1.kDecorateResult;
 //# sourceMappingURL=auto_encrypter.js.map

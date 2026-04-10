@@ -40,6 +40,20 @@ function streamIdentifier(stream, options) {
 }
 /** @internal */
 class Connection extends mongo_types_1.TypedEventEmitter {
+    /** @event */
+    static { this.COMMAND_STARTED = constants_1.COMMAND_STARTED; }
+    /** @event */
+    static { this.COMMAND_SUCCEEDED = constants_1.COMMAND_SUCCEEDED; }
+    /** @event */
+    static { this.COMMAND_FAILED = constants_1.COMMAND_FAILED; }
+    /** @event */
+    static { this.CLUSTER_TIME_RECEIVED = constants_1.CLUSTER_TIME_RECEIVED; }
+    /** @event */
+    static { this.CLOSE = constants_1.CLOSE; }
+    /** @event */
+    static { this.PINNED = constants_1.PINNED; }
+    /** @event */
+    static { this.UNPINNED = constants_1.UNPINNED; }
     constructor(stream, options) {
         super();
         this.lastHelloMS = -1;
@@ -61,7 +75,7 @@ class Connection extends mongo_types_1.TypedEventEmitter {
         this.established = false;
         this.description = new stream_description_1.StreamDescription(this.address, options);
         this.generation = options.generation;
-        this.lastUseTime = (0, utils_1.now)();
+        this.lastUseTime = (0, utils_1.processTimeMS)();
         this.messageStream = this.socket
             .on('error', this.onSocketError.bind(this))
             .pipe(new SizedMessageTransform({ connection: this }))
@@ -104,7 +118,7 @@ class Connection extends mongo_types_1.TypedEventEmitter {
             false);
     }
     markAvailable() {
-        this.lastUseTime = (0, utils_1.now)();
+        this.lastUseTime = (0, utils_1.processTimeMS)();
     }
     onSocketError(cause) {
         this.onError(new error_1.MongoNetworkError(cause.message, { cause }));
@@ -242,7 +256,7 @@ class Connection extends mongo_types_1.TypedEventEmitter {
                 timeoutContext: options.timeoutContext,
                 signal: options.signal
             });
-            if (options.noResponse || message.moreToCome) {
+            if (message.moreToCome) {
                 yield responses_1.MongoDBResponse.empty;
                 return;
             }
@@ -270,7 +284,7 @@ class Connection extends mongo_types_1.TypedEventEmitter {
         const message = this.prepareCommand(ns.db, command, options);
         let started = 0;
         if (this.shouldEmitAndLogCommand) {
-            started = (0, utils_1.now)();
+            started = (0, utils_1.processTimeMS)();
             this.emitAndLogCommand(this.monitorCommands, Connection.COMMAND_STARTED, message.databaseName, this.established, new command_monitoring_events_1.CommandStartedEvent(this, message, this.description.serverConnectionId));
         }
         // If `documentsReturnedIn` not set or raw is not enabled, use input bson options
@@ -306,11 +320,7 @@ class Connection extends mongo_types_1.TypedEventEmitter {
                     throw new error_1.MongoServerError((object ??= document.toObject(bsonOptions)));
                 }
                 if (this.shouldEmitAndLogCommand) {
-                    this.emitAndLogCommand(this.monitorCommands, Connection.COMMAND_SUCCEEDED, message.databaseName, this.established, new command_monitoring_events_1.CommandSucceededEvent(this, message, options.noResponse
-                        ? undefined
-                        : message.moreToCome
-                            ? { ok: 1 }
-                            : (object ??= document.toObject(bsonOptions)), started, this.description.serverConnectionId));
+                    this.emitAndLogCommand(this.monitorCommands, Connection.COMMAND_SUCCEEDED, message.databaseName, this.established, new command_monitoring_events_1.CommandSucceededEvent(this, message, message.moreToCome ? { ok: 1 } : (object ??= document.toObject(bsonOptions)), started, this.description.serverConnectionId));
                 }
                 if (responseType == null) {
                     yield (object ??= document.toObject(bsonOptions));
@@ -389,8 +399,17 @@ class Connection extends mongo_types_1.TypedEventEmitter {
                 throw new error_1.MongoOperationTimeoutError('Server roundtrip time is greater than the time remaining');
             }
         }
-        if (this.socket.write(buffer))
-            return;
+        try {
+            if (this.socket.write(buffer))
+                return;
+        }
+        catch (writeError) {
+            const networkError = new error_1.MongoNetworkError('unexpected error writing to socket', {
+                cause: writeError
+            });
+            this.onError(networkError);
+            throw networkError;
+        }
         const drainEvent = (0, utils_1.once)(this.socket, 'drain', options);
         const timeout = options?.timeoutContext?.timeoutForSocketWrite;
         const drained = timeout ? Promise.race([drainEvent, timeout]) : drainEvent;
@@ -452,20 +471,6 @@ class Connection extends mongo_types_1.TypedEventEmitter {
     }
 }
 exports.Connection = Connection;
-/** @event */
-Connection.COMMAND_STARTED = constants_1.COMMAND_STARTED;
-/** @event */
-Connection.COMMAND_SUCCEEDED = constants_1.COMMAND_SUCCEEDED;
-/** @event */
-Connection.COMMAND_FAILED = constants_1.COMMAND_FAILED;
-/** @event */
-Connection.CLUSTER_TIME_RECEIVED = constants_1.CLUSTER_TIME_RECEIVED;
-/** @event */
-Connection.CLOSE = constants_1.CLOSE;
-/** @event */
-Connection.PINNED = constants_1.PINNED;
-/** @event */
-Connection.UNPINNED = constants_1.UNPINNED;
 /** @internal */
 class SizedMessageTransform extends stream_1.Transform {
     constructor({ connection }) {
@@ -516,11 +521,7 @@ class CryptoConnection extends Connection {
     async command(ns, cmd, options, responseType) {
         const { autoEncrypter } = this;
         if (!autoEncrypter) {
-            // TODO(NODE-6065): throw a MongoRuntimeError in Node V7
-            // @ts-expect-error No cause provided because there is no underlying error.
-            throw new error_1.MongoMissingDependencyError('No AutoEncrypter available for encryption', {
-                dependencyName: 'n/a'
-            });
+            throw new error_1.MongoRuntimeError('No AutoEncrypter available for encryption');
         }
         const serverWireVersion = (0, utils_1.maxWireVersion)(this);
         if (serverWireVersion === 0) {

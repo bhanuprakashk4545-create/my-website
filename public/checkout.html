@@ -301,6 +301,24 @@
   <script src="js/cart.js"></script>
 
   <script>
+    'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function CheckoutPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // or your auth method
+    // OR better: call your /api/me endpoint
+
+    if (!token) {
+      router.push('/login?redirect=/checkout'); // send user back to checkout after login
+    }
+  }, [router]);
+
+  // rest of your checkout code...
+}
   // Update checkout page with real cart data + quantity/remove + address check
   function updateCheckoutPage() {
     const cart = getCart() || [];
