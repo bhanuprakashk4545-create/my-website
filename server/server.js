@@ -58,6 +58,7 @@ app.use(async (req, res, next) => {
   await connectDB();
   next();
 });
+connectDB(); // connect once when server starts
 
 // Catch-all route: Serve frontend for all other paths (SPA routing)
 app.get('*', (req, res) => {
