@@ -207,6 +207,7 @@
   box-shadow: none;
   transform: none;
 }
+
     }
   </style>
 </head>
@@ -247,7 +248,9 @@
 
   <!-- Checkout Content -->
   <main class="checkout-container">
-
+<div id="login-warning" style="display:none; color:#dc3545; font-weight:bold; text-align:center; margin:15px 0; padding:10px; background:#fee2e2; border-radius:8px;">
+  Please login to proceed with checkout
+</div>
     <!-- Cart Summary -->
     <div class="cart-summary">
       <h2>Your Cart Items</h2>
@@ -266,7 +269,23 @@
 
       <div class="address-box">
         <strong>Delivery Address</strong><br>
-        <span id="address-display">No address added yet.<br><a href="address.html">Add / Update Address →</a></span>
+        <span id="address-display">No address added yet.<br><a href="address.html" ><button type="button" class="btn btn-info" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 5px ;
+  background: linear-gradient(135deg, #8be2fa, #3ac0ed);
+  color: rgb(0, 0, 0);
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(6, 180, 238, 0.35);
+  transition: all 0.3s ease;
+  cursor: pointer;
+" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(167,139,250,0.6)'"
+   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(167,139,250,0.35)'" id="login-link">Add / Update Address →</button></a></span>
       </div>
 
       <div class="summary-item">
@@ -283,7 +302,7 @@
       </div>
 
       <button class="proceed-btn" id="proceed-payment-btn" disabled>Proceed to Payment</button>
-      <a href="cart.html" class="back-btn">← Back to Cart</a>
+      <a href="cart.html" class="back-btn" style="background-color: #28a745;">← Back to Cart</a>
     </div>
 
   </main>
@@ -301,25 +320,8 @@
   <script src="js/cart.js"></script>
 
   <script>
-    'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function CheckoutPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token'); // or your auth method
-    // OR better: call your /api/me endpoint
-
-    if (!token) {
-      router.push('/login?redirect=/checkout'); // send user back to checkout after login
-    }
-  }, [router]);
-
-  // rest of your checkout code...
-}
-  // Update checkout page with real cart data + quantity/remove + address check
+  // Update checkout page with real cart data + quantity/remove + address check + LOGIN CHECK
+  
   function updateCheckoutPage() {
     const cart = getCart() || [];
     const itemsContainer = document.getElementById('cart-items');
@@ -329,9 +331,32 @@ export default function CheckoutPage() {
     const grandTotalEl = document.getElementById('grand-total');
     const proceedBtn = document.getElementById('proceed-payment-btn');
     const addressDisplay = document.getElementById('address-display');
+    const loginWarning = document.getElementById('login-warning') || createLoginWarning();
 
     itemsContainer.innerHTML = '';
     let subtotal = 0;
+
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // User not logged in → disable checkout
+      loginWarning.style.display = 'block';
+      proceedBtn.disabled = true;
+      proceedBtn.textContent = 'Login to Checkout';
+      proceedBtn.style.background = '#6b7280';
+      proceedBtn.style.cursor = 'not-allowed';
+
+      if (cart.length === 0) {
+        emptyMsg.style.display = 'block';
+      }
+      return;
+    } else {
+      loginWarning.style.display = 'none';
+      proceedBtn.disabled = false;
+      proceedBtn.style.background = ''; // reset style
+      proceedBtn.style.cursor = 'pointer';
+    }
 
     if (cart.length === 0) {
       emptyMsg.style.display = 'block';
@@ -339,7 +364,7 @@ export default function CheckoutPage() {
       subtotalSummary.textContent = '₹0.00';
       grandTotalEl.textContent = '₹0.00';
       proceedBtn.disabled = true;
-      proceedBtn.textContent = 'Proceed to Payment';
+      proceedBtn.textContent = 'Cart is Empty';
       return;
     }
 
@@ -363,22 +388,7 @@ export default function CheckoutPage() {
           <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
         </div>
         <div class="item-total">₹${itemTotal.toFixed(2)}</div>
-        <button class="remove-btn" onclick="removeItem(${index})" style="
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #f87171, #ef4444);
-  color: white;
-  font-size: 1.15rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(248,113,113,0.4);
-  transition: all 0.3s ease;
-  cursor: pointer;
-" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
-   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'">Remove</button>
+        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
       `;
       itemsContainer.appendChild(div);
     });
@@ -387,7 +397,7 @@ export default function CheckoutPage() {
     subtotalSummary.textContent = `₹${subtotal.toFixed(2)}`;
     grandTotalEl.textContent = `₹${subtotal.toFixed(2)}`;
 
-    // Address check & button state
+    // Address check
     const savedAddress = localStorage.getItem('savedAddress');
     if (savedAddress) {
       const addr = JSON.parse(savedAddress);
@@ -406,6 +416,16 @@ export default function CheckoutPage() {
       proceedBtn.disabled = true;
       proceedBtn.textContent = 'Add Address First';
     }
+  }
+
+  // Create login warning element if not exists
+  function createLoginWarning() {
+    const warning = document.createElement('div');
+    warning.id = 'login-warning';
+    warning.style.cssText = 'color:#dc3545; font-weight:bold; text-align:center; margin:15px 0; padding:10px; background:#fee2e2; border-radius:8px;';
+    warning.innerHTML = 'Please login to proceed with checkout';
+    document.querySelector('.checkout-container').insertBefore(warning, document.getElementById('checkout-summary'));
+    return warning;
   }
 
   // Change quantity
@@ -428,8 +448,15 @@ export default function CheckoutPage() {
     showToast('Item removed from cart');
   }
 
-  // Proceed to payment
+  // Proceed to payment - BLOCKED if not logged in
   document.getElementById('proceed-payment-btn').addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Please login to proceed with checkout");
+      window.location.href = 'login.html';
+      return;
+    }
+
     if (getCart().length === 0) {
       showToast('Your cart is empty!', 'error');
       return;
@@ -441,14 +468,14 @@ export default function CheckoutPage() {
     window.location.href = 'payment.html';
   });
 
-  // Listen for storage changes (when address saved in another tab)
+  // Listen for storage changes
   window.addEventListener('storage', (e) => {
     if (e.key === 'savedAddress') {
       updateCheckoutPage();
     }
   });
 
-  // Re-check address when tab becomes visible (after returning from address.html)
+  // Re-check when tab becomes visible
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       updateCheckoutPage();
