@@ -4,7 +4,7 @@ const sampleProducts = [
   {
     _id: "1",
     name: "Wireless Earbuds Pro",
-    price: 10,
+    price: 699,
     image: "https://thumbs.dreamstime.com/b/rostov-don-russia-december-apple-airpods-pro-white-background-wireless-headphones-charging-case-box-close-up-171491430.jpg",
     category: "electronics",
     description: "Premium true wireless earbuds featuring active noise cancellation (ANC), transparency mode, powerful 11mm dynamic drivers for deep bass, IPX4 sweat and water resistance, up to 30 hours total playback with the charging case (6 hours per charge), fast charging (10 minutes = 2 hours), intuitive touch controls, low-latency gaming mode, crystal-clear calls with dual microphones, and ergonomic in-ear fit. Ideal for music lovers, commuters, and fitness enthusiasts."
