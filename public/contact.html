@@ -321,7 +321,30 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+  <!-- Mini Cart Sidebar -->
+<div id="mini-cart" class="mini-cart">
+  <div class="mini-cart-header">
+    <h3>Your Cart (<span id="mini-cart-count">0</span>)</h3>
+    <button id="close-cart" class="close-btn">&times;</button>
+  </div>
+  
+  <div id="mini-cart-items" class="mini-cart-items"></div>
+  
+  <div class="mini-cart-footer">
+    <div class="mini-total">
+      <span>Total</span>
+      <strong id="mini-cart-total">₹0.00</strong>
+    </div>
+    <button id="mini-view-cart-btn" class="view-cart-btn">View Full Cart</button>
+    <button id="mini-checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    <button id="mini-continue-btn" class="continue-btn">
+      Continue Shopping
+    </button>
+  </div>
+</div>
 
+<!-- Overlay -->
+<div id="cart-overlay" class="cart-overlay"></div>
   <script>
     document.getElementById('contact-form').addEventListener('submit', async (e) => {
       e.preventDefault();

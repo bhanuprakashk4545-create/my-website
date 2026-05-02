@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .filters { background: #f4f5f7; padding: 1.5rem; text-align: center; border-bottom: 1px solid #ddd; background-color: rgb(223, 193, 152); border-radius: 20px;}
+    .filters { background: #ffffff; padding: 1.5rem; text-align: center; border-bottom: 1px solid #ffffff; background-color: rgb(223, 193, 152); border-radius: 20px;}
     .search-bar { margin-bottom: 1rem; }
     #search-input { width: 100%; max-width: 500px; padding: 0.8rem; font-size: 1.1rem; border-radius: 6px; border: 1px solid #ccc; }
     .category-filters { margin: 1rem 0; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
-    .filter-btn { padding: 0.6rem 1.2rem; background: #9dcbf8; border: none; border-radius: 30px; cursor: pointer; }
-    .filter-btn.active, .filter-btn:hover { background: #65cce9; color: white; }
+    .filter-btn { padding: 0.6rem 1.2rem; background:lightskyblue ; border: none; border-radius: 30px; cursor: pointer; }
+    .filter-btn.active, .filter-btn:hover { background:rgb(14, 119, 204); color: white; }
     .sort-options { margin: 1rem 0; }
     #sort-select { padding: 0.6rem 1rem; font-size: 1rem; border-radius: 6px; }
     .products-section { padding: 2rem; }
@@ -107,6 +107,30 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+    <!-- Mini Cart Sidebar -->
+<div id="mini-cart" class="mini-cart">
+  <div class="mini-cart-header">
+    <h3>Your Cart (<span id="mini-cart-count">0</span>)</h3>
+    <button id="close-cart" class="close-btn">&times;</button>
+  </div>
+  
+  <div id="mini-cart-items" class="mini-cart-items"></div>
+  
+  <div class="mini-cart-footer">
+    <div class="mini-total">
+      <span>Total</span>
+      <strong id="mini-cart-total">₹0.00</strong>
+    </div>
+    <button id="mini-view-cart-btn" class="view-cart-btn">View Full Cart</button>
+    <button id="mini-checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    <button id="mini-continue-btn" class="continue-btn">
+      Continue Shopping
+    </button>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div id="cart-overlay" class="cart-overlay"></div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>

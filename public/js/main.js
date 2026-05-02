@@ -169,7 +169,168 @@ if (hamburger && navMenu) {
     });
   });
 }
+// Open Mini Cart
+function openMiniCart() {
+  document.getElementById('mini-cart').classList.add('open');
+  document.getElementById('cart-overlay').classList.add('active');
+  updateMiniCart();
+}
 
+// Close Mini Cart
+function closeMiniCart() {
+  document.getElementById('mini-cart').classList.remove('open');
+  document.getElementById('cart-overlay').classList.remove('active');
+}
+
+// Update Mini Cart Content
+function updateMiniCart() {
+  const cart = getCart();
+  const container = document.getElementById('mini-cart-items');
+  const countEl = document.getElementById('mini-cart-count');
+  const totalEl = document.getElementById('mini-cart-total');
+
+  countEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+  let total = 0;
+  container.innerHTML = '';
+
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:3rem 1rem; color:#64748b;">
+        <h2 style="font-size:3rem; margin:0;">🛒</h2>
+        <p>Your cart is empty</p>
+      </div>`;
+    totalEl.textContent = '₹0.00';
+    return;
+  }
+
+  cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+
+    container.innerHTML += `
+      <div class="mini-cart-item">
+        <img src="${item.image}" alt="${item.name}">
+        <div style="flex:1">
+          <p style="margin:0 0 4px 0; font-weight:600;">${item.name}</p>
+          <p style="margin:0; color:#28a745;">₹${item.price} × ${item.quantity}</p>
+        </div>
+        <div style="text-align:right">
+         <button onclick="changeMiniQty(${index}, -1)" style="width:28px;height:28px">-</button>
+          <button onclick="changeMiniQty(${index}, 1)" style="width:28px;height:28px">+</button>
+          <button onclick="removeFromMiniCart(${index})"  margin-left:8px;" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 0.8rem;
+          padding: 7px 15px;
+          background: linear-gradient(135deg, #f87171, #ef4444);
+          color: white;
+          font-size: 1.15rem;
+          font-weight: 600;
+          border: none;
+          border-radius: 9999px;
+          box-shadow: 0 4px 16px rgba(248,113,113,0.4);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(248,113,113,0.6)'"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(248,113,113,0.4)'">Remove</button>
+        </div>
+      </div>`;
+  });
+
+  totalEl.textContent = `₹${total.toFixed(2)}`;
+}
+
+// Quantity change in mini cart
+window.changeMiniQty = function(index, change) {
+  const cart = getCart();
+  cart[index].quantity += change;
+  if (cart[index].quantity < 1) cart[index].quantity = 1;
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateMiniCart();
+  updateCartCount();
+};
+
+// Remove from mini cart
+window.removeFromMiniCart = function(index) {
+  let cart = getCart();
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateMiniCart();
+  updateCartCount();
+  showToast('Item removed', 'info');
+};
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const cartLink = document.querySelector('.cart-link');
+  if (cartLink) cartLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    openMiniCart();
+  });
+
+  document.getElementById('close-cart').addEventListener('click', closeMiniCart);
+  document.getElementById('cart-overlay').addEventListener('click', closeMiniCart);
+
+  document.getElementById('mini-checkout-btn').addEventListener('click', () => {
+    closeMiniCart();
+    window.location.href = 'checkout.html';
+  });
+  document.getElementById('mini-view-cart-btn').addEventListener('click', () => {
+    closeMiniCart();
+    window.location.href = 'cart.html';
+  });
+
+  document.getElementById('mini-continue-btn').addEventListener('click', closeMiniCart);
+});
+// Dark Mode Toggle
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  
+  // Save preference
+  if (document.body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+    document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+    document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
+  }
+}
+
+// Initialize Dark Mode
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('theme-toggle');
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', toggleDarkMode);
+  }
+
+  // Load saved preference
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    document.body.classList.add('dark-mode');
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+  }
+});
+// Magnetic Button Effect
+function initMagneticButtons() {
+  const buttons = document.querySelectorAll('.magnetic-btn');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0, 0)';
+    });
+  });
+}
+
+// Call this after page loads
+document.addEventListener('DOMContentLoaded', initMagneticButtons);
 // Make functions available globally if needed in inline scripts
 window.showToast = showToast;
 window.updateCartCount = updateCartCount;

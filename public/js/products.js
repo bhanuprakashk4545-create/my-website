@@ -392,13 +392,13 @@ function renderProducts(productsToShow) {
 
   productsToShow.forEach((p, index) => {
     const card = document.createElement('div');
-    card.className = 'product-card';
-    card.style.transitionDelay = `${index * 0.1}s`;
-    card.style.cursor = 'pointer'; // hand cursor on whole card
-
-    card.innerHTML = `
-      <img src="${p.image || '/images/placeholder.jpg'}" alt="${p.name}">
-      <h3>${p.name}</h3>
+card.className = 'product-card';
+card.innerHTML = `
+  <div class="product-image">
+    <img src="${p.image}" alt="${p.name}" loading="lazy">
+  </div>
+  <div class="product-info">
+    <h3>${p.name}</h3>
       <p style="color:#007bff; font-size:0.9rem; padding:0 1rem 0.5rem; line-height:1.4; margin:0; font-style:italic;">
         more details ...
       </p>

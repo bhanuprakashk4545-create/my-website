@@ -266,6 +266,10 @@
        id="login-link">
       Login / Register
     </a>
+    <!-- Add this inside .nav-right div -->
+<button id="theme-toggle" class="theme-toggle-btn">
+  <i class="fas fa-moon"></i>
+</button>
   </div>
 </nav>
   </header>
@@ -274,7 +278,9 @@
   <section class="hero">
     <div class="hero-carousel">
       <div class="carousel-slides" id="carousel-slides">
-        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=1400');">
+        
+        <!-- Slide 1 -->
+        <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=1400');">
           <div class="carousel-content">
             <div class="big-sale-badge">BIG SALE</div>
             <h2>Up to 70% OFF</h2>
@@ -283,6 +289,7 @@
           </div>
         </div>
 
+        <!-- Slide 2 -->
         <div class="carousel-slide" style="background-image: url('https://cdn.thewirecutter.com/wp-content/media/2023/08/powerbanks-2048px-1508-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp');">
           <div class="carousel-content">
             <div class="big-sale-badge">FLASH DEAL</div>
@@ -292,6 +299,7 @@
           </div>
         </div>
 
+        <!-- Slide 3 -->
         <div class="carousel-slide" style="background-image: url('https://thumbs.dreamstime.com/b/blue-portable-speaker-white-wireless-earbuds-light-surface-compact-mesh-grille-strap-next-to-open-case-purple-371732881.jpg');">
           <div class="carousel-content">
             <div class="big-sale-badge">LIMITED STOCK</div>
@@ -302,11 +310,18 @@
         </div>
       </div>
 
-      <div class="carousel-dots" id="carousel-dots"></div>
-    </div>
+      <!-- Left Arrow -->
+      <button class="carousel-arrow left-arrow" id="prev-slide">
+        ‹
+      </button>
 
-    <div class="hero-content" style="position:absolute; z-index:3; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; width:90%;">
-      <!-- optional overlay text -->
+      <!-- Right Arrow -->
+      <button class="carousel-arrow right-arrow" id="next-slide">
+        ›
+      </button>
+
+      <!-- Optional: Keep Dots (you can remove if not needed) -->
+      <div class="carousel-dots" id="carousel-dots"></div>
     </div>
   </section>
 
@@ -353,6 +368,30 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+    <!-- Mini Cart Sidebar -->
+<div id="mini-cart" class="mini-cart">
+  <div class="mini-cart-header">
+    <h3>Your Cart (<span id="mini-cart-count">0</span>)</h3>
+    <button id="close-cart" class="close-btn">&times;</button>
+  </div>
+  
+  <div id="mini-cart-items" class="mini-cart-items"></div>
+  
+  <div class="mini-cart-footer">
+    <div class="mini-total">
+      <span>Total</span>
+      <strong id="mini-cart-total">₹0.00</strong>
+    </div>
+    <button id="mini-view-cart-btn" class="view-cart-btn">View Full Cart</button>
+    <button id="mini-checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    <button id="mini-continue-btn" class="continue-btn" >
+      Continue Shopping
+    </button>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div id="cart-overlay" class="cart-overlay"></div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
@@ -360,12 +399,16 @@
   <script src="js/products.js"></script>
 
   <script>
-    // Your existing carousel logic (unchanged)
-    const slides = document.getElementById('carousel-slides');
+    // Carousel Elements
+    const slidesContainer = document.getElementById('carousel-slides');
     const dotsContainer = document.getElementById('carousel-dots');
+    const prevBtn = document.getElementById('prev-slide');
+    const nextBtn = document.getElementById('next-slide');
+
     let currentSlide = 0;
     const totalSlides = 3;
 
+    // Create Dots (optional - you can keep or remove)
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement('div');
       dot.className = 'dot';
@@ -373,29 +416,48 @@
       dot.addEventListener('click', () => goToSlide(i));
       dotsContainer.appendChild(dot);
     }
-
     const dots = document.querySelectorAll('.dot');
 
     function goToSlide(index) {
       currentSlide = index;
-      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Update active dot
       dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
     }
 
-    let autoSlide = setInterval(() => {
+    // Arrow Navigation
+    function nextSlide() {
       currentSlide = (currentSlide + 1) % totalSlides;
       goToSlide(currentSlide);
-    }, 5000);
+    }
 
-    document.querySelector('.hero-carousel').addEventListener('mouseenter', () => clearInterval(autoSlide));
-    document.querySelector('.hero-carousel').addEventListener('mouseleave', () => {
-      autoSlide = setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        goToSlide(currentSlide);
-      }, 5000);
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      goToSlide(currentSlide);
+    }
+
+    // Add Event Listeners to Arrows
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    // Auto Slide
+    let autoSlide = setInterval(nextSlide, 5000);
+
+    // Pause on hover
+    const heroCarousel = document.querySelector('.hero-carousel');
+    heroCarousel.addEventListener('mouseenter', () => clearInterval(autoSlide));
+    heroCarousel.addEventListener('mouseleave', () => {
+      autoSlide = setInterval(nextSlide, 5000);
     });
 
-    // Featured products + simple stagger animation (unchanged from previous)
+    // Keyboard Support (Optional but nice)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowRight") nextSlide();
+      if (e.key === "ArrowLeft") prevSlide();
+    });
+
+    // Featured Products (Your existing code - kept as is)
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('featured-products');
       if (!container) return;
@@ -407,32 +469,41 @@
         container.innerHTML = '';
 
         featured.forEach((p, index) => {
-  const card = document.createElement('div');
-  card.className = 'product-card';
-  card.style.transitionDelay = `${index * 0.1}s`; // stagger animation
-  card.style.cursor = 'pointer';
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <div class="product-image">
+              <img src="${p.image}" alt="${p.name}" loading="lazy">
+            </div>
+            <div class="product-info">
+              <h3>${p.name}</h3>
+              <p style="color:#007bff; font-size:0.9rem; padding:0 1rem 0.5rem; line-height:1.4; margin:0; font-style:italic;">
+                more details ...
+              </p>
+              <p style="font-weight:bold; color:#28a745; padding:0 1rem;">₹${Number(p.price).toFixed(2)}</p>
+              <button class="add-to-cart outline-btn" 
+                      data-id="${p._id}" 
+                      data-name="${p.name.replace(/"/g, '&quot;')}" 
+                      data-price="${p.price}" 
+                      data-image="${p.image}">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+            </div>
+          `;
 
-  card.innerHTML = `
-    <img src="${p.image}" alt="${p.name}">
-    <h3>${p.name}</h3>
-    <p style="font-weight:bold; color:#28a745; padding:0 1rem;">₹${Number(p.price).toFixed(2)}</p>
-    <button class="add-to-cart outline-btn" data-id="${p._id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-price="${p.price}" data-image="${p.image}">
-  <i class="fas fa-cart-plus"></i> Add to Cart
-</button>
-  `;
+          // Click whole card to open detail page
+          card.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-to-cart')) return;
+            window.location.href = `product.html?id=${p._id}`;
+          });
 
-  // Click whole card to open detail page (except button)
-  card.addEventListener('click', (e) => {
-    if (e.target.classList.contains('add-to-cart')) return;
-    window.location.href = `product.html?id=${p._id}`;
-  });
+          container.appendChild(card);
 
-  container.appendChild(card);
+          // Stagger animation
+          setTimeout(() => card.classList.add('visible'), 100 + (index * 80));
+        });
 
-  // Trigger animation
-  setTimeout(() => card.classList.add('visible'), 100);
-});
-
+        // Add to cart functionality
         document.querySelectorAll('.add-to-cart').forEach(btn => {
           btn.addEventListener('click', e => {
             e.stopPropagation();
@@ -442,6 +513,6 @@
         });
       }, 600);
     });
-  </script>
+</script>
 </body>
 </html>

@@ -57,9 +57,8 @@
   <!-- Navbar (copy from your other pages) -->
   <header>
     <nav class="navbar">
-      <div class="logo">MyShop</div>
+      <div class="logo"><a href="index.html" style="color: #f8fafc; text-decoration: none;">My Shop</a></div> 
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
@@ -129,7 +128,7 @@
     transition: all 0.3s ease;
   " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(102,118,234,0.6)'" 
      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(102,118,234,0.4)'">
-    Back to Products
+    Back to Products →
   </a>
 </div>
     </div>
@@ -139,7 +138,31 @@
   <footer>
     <p>© 2025 MyShop. All rights reserved.</p>
   </footer>
-<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>  <!-- Scripts -->
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+  <!-- Mini Cart Sidebar -->
+<div id="mini-cart" class="mini-cart">
+  <div class="mini-cart-header">
+    <h3>Your Cart (<span id="mini-cart-count">0</span>)</h3>
+    <button id="close-cart" class="close-btn">&times;</button>
+  </div>
+  
+  <div id="mini-cart-items" class="mini-cart-items"></div>
+  
+  <div class="mini-cart-footer">
+    <div class="mini-total">
+      <span>Total</span>
+      <strong id="mini-cart-total">₹0.00</strong>
+    </div>
+    <button id="mini-view-cart-btn" class="view-cart-btn">View Full Cart</button>
+    <button id="mini-checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    <button id="mini-continue-btn" class="continue-btn">
+      Continue Shopping
+    </button>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div id="cart-overlay" class="cart-overlay"></div>  <!-- Scripts -->
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/products.js"></script>

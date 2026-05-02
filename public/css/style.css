@@ -239,60 +239,6 @@ body {
   background: #2563eb;
 }
 
-/* Filters */
-.filters {
-  background: white;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-#search-input {
-  width: 100%;
-  max-width: 600px;
-  padding: 0.9rem 1.2rem;
-  font-size: 1.1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  margin: 0 auto 1rem;
-  display: block;
-}
-
-.sort-options {
-  margin: 1rem 0;
-  text-align: center;
-}
-
-#sort-select {
-  padding: 0.7rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-}
-
-.category-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  justify-content: center;
-}
-
-.filter-btn {
-  padding: 0.6rem 1.3rem;
-  background: #f3f4f6;
-  border: none;
-  border-radius: 9999px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  background: #3b82f6;
-  color: white;
-}
-
 /* ================================================ */
 /* 6. Auth Pages (Login / Register)                 */
 /* ================================================ */
@@ -442,40 +388,74 @@ footer {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
-/* Simple product card animation */
-.product-card {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.7s ease-out;
-}
 
-.product-card.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* Fixed Product Card Layout */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  padding-bottom: 10px;
 }
 
 .product-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.18);
-}
-.product-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: all 0.25s ease;
-    cursor: pointer;
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
+/* Make image consistent */
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  background: #f8fafc;
+  padding: 10px;
+}
+
+/* Product Info - Fixed Height */
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+
+  align-items: center;
+}
+
+/* Force name to take fixed space */
+.product-info h3 {
+  min-height: 48px;           /* Important: fixes different name lengths */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+/* Price */
+.product-info .price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #28a741;
+  font-size: 30px;
+  margin: 8px 0;
+}
 .product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-.product-image-wrapper {
-    background: #f8f9fa;
-    text-align: center;
+.product-card img {
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.1);
 }
 
 .short-desc {
@@ -495,9 +475,7 @@ footer {
 }
 .outline-btn {
   padding: 0.8rem 1.8rem;
-  
-  
-  border: 2px solid #007bff;
+  border: 2px solid #00ffff;
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
@@ -665,4 +643,249 @@ footer {
 .toast.show {
     transform: translateX(0);
     opacity: 1;
+}
+/* Hero Carousel Arrows */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.carousel-arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-arrow {
+  left: 20px;
+}
+
+.right-arrow {
+  right: 20px;
+}
+
+/* Optional: Make arrows bigger on hover */
+.carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.view-cart-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 2px solid #3528a7;
+  color: #ffffff;
+  background:linear-gradient(60deg, #9578fb, #4837fe);
+  border-radius: 8px;
+  margin-bottom: 5px;
+  font-size: medium;
+  font-weight: 600;
+  cursor: pointer;
+}
+.mini-cart {
+  position: fixed;
+  top: 0;
+  right: -450px;
+  width: 450px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  box-shadow: -15px 0 40px rgba(0,0,0,0.25);
+  transition: right 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #eee;
+}
+
+.mini-cart.open {
+  right: 0;
+}
+
+.mini-cart-header {
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.close-btn {
+  font-size: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.mini-cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mini-cart-item {
+  display: flex;
+  gap: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.mini-cart-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.mini-cart-footer {
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #eee;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #3ae762, #079f28);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.continue-btn {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: 2px solid #f98585;
+  color: #ffffff;
+  background-color: rgb(255, 84, 84);
+  border-radius: 12px;
+  font-size: medium;
+  font-weight: 600;
+  cursor: pointer;
+}
+/* Dark Mode Styles */
+body.dark-mode {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-mode .navbar {
+  background: #1e2937;
+}
+
+body.dark-mode .product-card {
+  background: #1e2937;
+  color: #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .cart-item,
+body.dark-mode .mini-cart {
+  background: #1e2937;
+}
+
+body.dark-mode .hero {
+  background: linear-gradient(135deg, #1e3a8a, #0f172a);
+}
+
+/* Toggle Button Styling */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  color: #f8fafc;
+  transition: transform 0.3s;
+}
+
+.theme-toggle-btn:hover {
+  transform: rotate(90deg);
+}
+.view-cart-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.view-cart-btn:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+.checkout-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checkout-btn:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+.continue-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.continue-btn:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+/* Magnetic Button - Premium Effect */
+.magnetic-btn {
+  position: relative;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.magnetic-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  z-index: -1;
+  transition: all 0.4s ease;
+}
+
+.magnetic-btn:hover::before {
+  transform: scale(1.1);
 }
