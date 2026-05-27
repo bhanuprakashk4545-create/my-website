@@ -538,25 +538,27 @@
       }, 600);
     });
 
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const authGate = document.getElementById('auth-gate');
     const mainContent = document.getElementById('main-content');
 
-    // Only check for login (no guestMode memory)
     const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('userId');
+    const hasSkipped = localStorage.getItem('guestSkipped') === 'true';
 
-    if (isLoggedIn) {
-      // If logged in → skip gate
+    // Show main content if user is logged in OR has already skipped on this browser
+    if (isLoggedIn || hasSkipped) {
       authGate.style.display = 'none';
       mainContent.style.display = 'block';
     } else {
-      // Not logged in → always show auth gate (even after refresh)
       authGate.style.display = 'flex';
       mainContent.style.display = 'none';
     }
 
-    // Skip button - Go to home but don't remember (gate will show again on refresh)
+    // Skip button
     document.getElementById('skip-btn').addEventListener('click', () => {
+      // Remember that user chose to skip on THIS browser
+      localStorage.setItem('guestSkipped', 'true');
+
       authGate.style.opacity = '0';
       
       setTimeout(() => {
@@ -565,7 +567,6 @@
       }, 600);
     });
   });
-
 </script>
 </body>
 </html>
