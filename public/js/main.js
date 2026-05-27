@@ -97,42 +97,56 @@ function updateCartCount() {
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const userStatus = document.getElementById('user-status');
+  const logoutBtn = document.getElementById('logout-btn');
+  const loginLink = document.getElementById('login-link');
 
-  if (token && userStatus) {
-    // Optional: fetch user info from backend
-    fetch('https://my-shop-one-rho.vercel.app/api/auth/me', {
+  if (token) {
+    // User is logged in
+    userStatus.textContent = 'Logged In';
+
+    // Optional: Try to show user name (if /api/auth/me exists)
+    fetch('/api/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(res => res.json())
     .then(data => {
       if (data.name) {
-        userStatus.textContent = `Welcome, ${data.name}`;
-      } else {
-        userStatus.textContent = 'Logged In';
+        userStatus.textContent = `Hi, ${data.name}`;
       }
     })
     .catch(() => {
+      // If /api/auth/me route doesn't exist, keep it simple
       userStatus.textContent = 'Logged In';
     });
 
-    // Show logout button
-    document.getElementById('logout-btn').style.display = 'inline';
-    document.getElementById('login-link').style.display = 'none';
+    logoutBtn.style.display = 'inline';
+    loginLink.style.display = 'none';
   } else {
+    // Guest user
     userStatus.textContent = 'Guest';
-    document.getElementById('logout-btn').style.display = 'none';
-    document.getElementById('login-link').style.display = 'inline';
+    logoutBtn.style.display = 'none';
+    loginLink.style.display = 'inline';
   }
 
-  // Logout handler
-  document.getElementById('logout-btn').addEventListener('click', () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('savedAddress');
-  localStorage.removeItem('cart'); // clear old cart
-  updateCartCount(); // update navbar count to 0
-  showToast('Logged out successfully');
-  window.location.href = 'login.html';
-});
+  // Logout Handler - Improved
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      // Clear all user data
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('guestSkipped');     // ← Important for Auth Gate
+      localStorage.removeItem('savedAddress');
+      localStorage.removeItem('cart');
+
+      updateCartCount();   // Reset cart count to 0
+      showToast('Logged out successfully', 'success');
+
+      // Redirect to index.html to show Auth Gate again
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800);
+    });
+  }
 });
 
 // Animate product cards on scroll / load

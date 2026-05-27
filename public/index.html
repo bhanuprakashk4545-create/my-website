@@ -540,26 +540,30 @@
     const authGate = document.getElementById('auth-gate');
     const mainContent = document.getElementById('main-content');
 
-    // Check if user is already logged in
     const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('userId');
+    const hasSkipped = localStorage.getItem('guestSkipped') === 'true';
 
+    // Show Auth Gate only if NOT logged in AND has NOT skipped
     if (isLoggedIn) {
-      // Skip gate and show main website
+      authGate.style.display = 'none';
+      mainContent.style.display = 'block';
+    } else if (hasSkipped) {
       authGate.style.display = 'none';
       mainContent.style.display = 'block';
     } else {
-      // Show login gate
       authGate.style.display = 'flex';
       mainContent.style.display = 'none';
     }
 
     // Skip button
     document.getElementById('skip-btn').addEventListener('click', () => {
+      localStorage.setItem('guestSkipped', 'true');
+      
       authGate.style.opacity = '0';
       setTimeout(() => {
         authGate.style.display = 'none';
         mainContent.style.display = 'block';
-      }, 500);
+      }, 600);
     });
   });
 </script>
