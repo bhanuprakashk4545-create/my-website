@@ -215,9 +215,33 @@
 
   </style>
 </head>
-<body>
 
-  <!-- Navbar (unchanged) -->
+<body>
+<!-- BEAUTIFUL AUTH GATE -->
+<div id="auth-gate" class="auth-gate">
+  <div class="auth-gate-overlay"></div>
+  
+  <div class="auth-gate-content">
+    <div class="brand-logo">
+      <h1>My<span>Shop</span></h1>
+    </div>
+    
+    <h2>Welcome to the Future of Shopping</h2>
+    <p class="subtitle">Discover amazing products with a seamless and secure shopping experience</p>
+    
+    <div class="auth-buttons">
+      <a href="login.html" class="btn-primary">Login</a>
+      <a href="register.html" class="btn-secondary">Create New Account</a>
+    </div>
+    
+    <button id="skip-btn" class="skip-btn">Continue as Guest →</button>
+  </div>
+</div>
+
+<!-- Main Website Content -->
+<div id="main-content" style="display: none;">
+  <!-- Your normal navbar, hero, products etc. go here -->
+</div>
   <header>
     
     <nav class="navbar">
@@ -513,6 +537,35 @@
         });
       }, 600);
     });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const authGate = document.getElementById('auth-gate');
+    const mainContent = document.getElementById('main-content');
+
+    // Only check for login (no guestMode memory)
+    const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('userId');
+
+    if (isLoggedIn) {
+      // If logged in → skip gate
+      authGate.style.display = 'none';
+      mainContent.style.display = 'block';
+    } else {
+      // Not logged in → always show auth gate (even after refresh)
+      authGate.style.display = 'flex';
+      mainContent.style.display = 'none';
+    }
+
+    // Skip button - Go to home but don't remember (gate will show again on refresh)
+    document.getElementById('skip-btn').addEventListener('click', () => {
+      authGate.style.opacity = '0';
+      
+      setTimeout(() => {
+        authGate.style.display = 'none';
+        mainContent.style.display = 'block';
+      }, 600);
+    });
+  });
+
 </script>
 </body>
 </html>

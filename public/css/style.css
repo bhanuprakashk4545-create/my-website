@@ -825,7 +825,7 @@ body.dark-mode .hero {
 }
 
 .theme-toggle-btn:hover {
-  transform: rotate(90deg);
+  transform: rotate(25deg);
 }
 .view-cart-btn {
   position: relative;
@@ -888,4 +888,104 @@ body.dark-mode .hero {
 
 .magnetic-btn:hover::before {
   transform: scale(1.1);
+}
+.auth-gate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), 
+              url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=2000') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.8s ease;
+}
+
+.auth-gate-content {
+  text-align: center;
+  color: white;
+  max-width: 520px;
+  padding: 3rem 2rem;
+  z-index: 2;
+}
+
+.brand-logo h1 {
+  font-size: 5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 0.8rem;
+  background: linear-gradient(90deg, #c4b5fd, #e0e7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-logo span {
+  color: #e0e7ff;
+}
+
+.auth-gate-content h2 {
+  font-size: 2.6rem;
+  margin: 1rem 0 1.2rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.35rem;
+  line-height: 1.7;
+  opacity: 0.95;
+  margin-bottom: 3rem;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2.8rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 18px 42px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 200px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: white;
+  box-shadow: 0 10px 30px rgba(167, 139, 250, 0.45);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2.5px solid rgba(255,255,255,0.9);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+}
+
+.skip-btn {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 12px 24px;
+  transition: all 0.3s;
+}
+
+.skip-btn:hover {
+  color: white;
+  transform: translateY(-3px);
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
