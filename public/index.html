@@ -541,25 +541,34 @@
     const mainContent = document.getElementById('main-content');
 
     const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('userId');
-    const hasSkipped = localStorage.getItem('guestSkipped') === 'true';
+    
+    // Check if guest mode is still valid (1 minute)
+    const guestExpiry = localStorage.getItem('guestExpiry');
+    const isGuestValid = guestExpiry && Date.now() < parseInt(guestExpiry);
 
-    // Show Auth Gate only if NOT logged in AND has NOT skipped
     if (isLoggedIn) {
       authGate.style.display = 'none';
       mainContent.style.display = 'block';
-    } else if (hasSkipped) {
+    } 
+    else if (isGuestValid) {
       authGate.style.display = 'none';
       mainContent.style.display = 'block';
-    } else {
+    } 
+    else {
+      // Show Auth Gate
       authGate.style.display = 'flex';
       mainContent.style.display = 'none';
     }
 
-    // Skip button
+    // Skip button - Set 1 Minute Timer
     document.getElementById('skip-btn').addEventListener('click', () => {
+      const oneMinuteLater = Date.now() + (10 * 60 * 1000); // 1 Minute in milliseconds
+
       localStorage.setItem('guestSkipped', 'true');
-      
+      localStorage.setItem('guestExpiry', oneMinuteLater.toString());
+
       authGate.style.opacity = '0';
+      
       setTimeout(() => {
         authGate.style.display = 'none';
         mainContent.style.display = 'block';
