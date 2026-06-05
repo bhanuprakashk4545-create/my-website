@@ -63,9 +63,10 @@
 
   <!-- Filters + Search + Sort -->
   <section class="filters">
-    <div class="search-bar">
-      <input type="text" id="search-input" placeholder="🔎Search products..." />
-    </div>
+    <div class="search-container">
+  <input type="text" id="search-input" placeholder="🔎Search products..." autocomplete="off">
+  <div id="search-suggestions" class="suggestions-dropdown"></div>
+</div>
 
     <div class="sort-options">
       <label for="sort-select"><b>Sort by:</b></bSort> </label>

@@ -483,3 +483,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+const searchInput = document.getElementById('search-input');
+const suggestionsBox = document.getElementById('search-suggestions');
+let currentFocus = -1;
+
+// Highlight matching text
+function highlightMatch(text, term) {
+  const regex = new RegExp(term, 'gi');
+  return text.replace(regex, match => `<span class="highlight-text">${match}</span>`);
+}
+
+function showSuggestions(filteredProducts) {
+  suggestionsBox.innerHTML = '';
+  currentFocus = -1;
+
+  if (filteredProducts.length === 0) {
+    suggestionsBox.style.display = 'none';
+    return;
+  }
+
+  filteredProducts.forEach(product => {
+    const div = document.createElement('div');
+    div.className = 'suggestion-item';
+    div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <div class="suggestion-info">
+        <strong>${highlightMatch(product.name, searchInput.value)}</strong><br>
+        <small>₹${Number(product.price).toFixed(2)}</small>
+      </div>
+    `;
+
+    div.addEventListener('click', () => {
+      window.location.href = `product.html?id=${product._id}`;
+    });
+
+    suggestionsBox.appendChild(div);
+  });
+
+  suggestionsBox.style.display = 'block';
+}
+
+// Live Search
+searchInput.addEventListener('input', () => {
+  const term = searchInput.value.toLowerCase().trim();
+
+  if (term === '') {
+    suggestionsBox.style.display = 'none';
+    return;
+  }
+
+  const filtered = sampleProducts.filter(product => 
+    product.name.toLowerCase().includes(term) || 
+    (product.description && product.description.toLowerCase().includes(term))
+  );
+
+  showSuggestions(filtered);
+});
+
+// Keyboard Navigation (Arrow Keys + Enter)
+searchInput.addEventListener('keydown', (e) => {
+  const items = suggestionsBox.getElementsByClassName('suggestion-item');
+
+  if (e.key === 'ArrowDown') {
+    currentFocus++;
+    if (currentFocus >= items.length) currentFocus = 0;
+    addActive(items);
+  } 
+  else if (e.key === 'ArrowUp') {
+    currentFocus--;
+    if (currentFocus < 0) currentFocus = items.length - 1;
+    addActive(items);
+  } 
+  else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (currentFocus > -1 && items[currentFocus]) {
+      items[currentFocus].click();
+    }
+  } 
+  else if (e.key === 'Escape') {
+    suggestionsBox.style.display = 'none';
+  }
+});
+
+function addActive(items) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.remove('highlight');
+  }
+  if (items[currentFocus]) {
+    items[currentFocus].classList.add('highlight');
+    items[currentFocus].scrollIntoView({ block: "nearest" });
+  }
+}
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-container')) {
+    suggestionsBox.style.display = 'none';
+  }
+});

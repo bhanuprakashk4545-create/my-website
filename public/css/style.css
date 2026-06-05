@@ -989,3 +989,75 @@ body.dark-mode .hero {
   transform: translateY(-3px);
   text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+#search-input {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  outline: none;
+}
+
+#search-input:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.2);
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-top: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s;
+}
+
+.suggestion-item:hover,
+.suggestion-item.highlight {
+  background: #f3e8ff;
+}
+
+.suggestion-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.suggestion-info {
+  flex: 1;
+}
+
+.suggestion-info strong {
+  font-size: 1.05rem;
+}
+
+.highlight-text {
+  background: yellow;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
